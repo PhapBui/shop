@@ -1,0 +1,38 @@
+@baseUrl = https://js-post-api.herokuapp.com/api
+@product = products
+@resourceName=categories
+@category = categories
+#products
+# @name getAllProducts
+
+GET {{baseUrl}}/{{product}}
+###
+#products
+# @name addNewProduct
+
+POST {{baseUrl}}/{{product}}
+Content-Type: application/json
+
+{
+     "categoryId": "75bfe43d-1fef-4997-97e5-23556b095c54",
+    "id": 1,
+    "name": "New Shoes",
+    "color": "cyan",
+    "price": 99710,
+    "description": "add thu cong"
+}
+
+###
+#categories
+# @name getAllCategories
+
+GET {{baseUrl}}/{{category}}
+
+###
+# @name updateCategory
+PATCH  {{baseUrl}}/{{resourceName}}/2
+Content-Type: application/json
+
+{
+    "name":"new Laptop"
+}
