@@ -6,13 +6,41 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
+import { CssBaseline } from "@mui/material";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+const theme = createTheme({
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: `
+       *{
+          margin:0;
+          padding:0;
+        },
+        html{
+          font-size:0.625rem;
+          background-color: #efefef;
+        },
+        body{
+          font-size:1.6rem;
+        },
+       .slick-track{
+        display:flex;
+       }
+
+      `,
+    },
+  },
+});
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>
-        <App />
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <App />
+        </ThemeProvider>
       </BrowserRouter>
     </Provider>
   </React.StrictMode>

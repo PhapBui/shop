@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import Select from "react-select";
-import locationApi from "../api/locationApi.js";
+import locationApi from "../../api/locationApi.js";
 
-import { Provice } from "../constants/directory/index.js";
+import { Provice } from "../../constants/directory/index.js";
 
 function Directory() {
   const [provice, setProvice] = useState([]);
