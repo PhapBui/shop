@@ -9,7 +9,7 @@ const useFetch = (url) => {
       .catch((e) => console.log(e));
   }, [url]);
 
-  return [data];
+  return data;
 };
 
 export default useFetch;

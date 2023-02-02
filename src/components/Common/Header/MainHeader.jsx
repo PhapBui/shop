@@ -1,7 +1,7 @@
 import { Stack } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Logo from "./MainHeader/Logo.jsx";
-import Search from "./MainHeader/Search.jsx";
+import Search from "./MainHeader/Search/Search.jsx";
 import UserShortcut from "./MainHeader/UserShortcut.jsx";
 
 const MainHeaderContainer = styled(Stack)(({ theme }) => ({

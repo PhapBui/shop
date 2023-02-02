@@ -25,6 +25,9 @@ const theme = createTheme({
         },
        .slick-track{
         display:flex;
+       },
+       ul,li{
+        list-style-type:none;
        }
 
       `,

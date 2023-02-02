@@ -19,39 +19,18 @@ const QuickListItem = styled(Link)(({ theme }) => ({
   textDecoration: "none",
   color: "inherit",
 }));
-const data = [
-  {
-    id: 1,
-    path: "/trai-cay",
-    name: "trai cay",
-  },
-  {
-    id: 2,
-    path: "/thit",
-    name: "thit",
-  },
-  {
-    id: 3,
-    path: "/trung",
-    name: "trung",
-  },
-  {
-    id: 4,
-    path: "/tien",
-    name: "tien",
-  },
-];
-function QuickSearch() {
+
+function QuickSearch({ data }) {
   return (
     <QuickList>
       {data &&
         data.length > 0 &&
         data.map((a) => (
           <QuickListItem
-            to={a.path}
-            key={a.id}
+            to={a.url}
+            key={a.url}
           >
-            {a.name}
+            {a.keyword}
           </QuickListItem>
         ))}
     </QuickList>
