@@ -1,7 +1,5 @@
 import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useEffect } from "react";
-import { useState } from "react";
 import MenuList from "./components/MenuList.jsx";
 import TikiSeller from "./TikiSeller/TikiSeller.jsx";
 
@@ -25,27 +23,50 @@ const DefaultChild = styled(Box)(({ theme }) => ({
   },
 }));
 
-function Sidebar() {
-  const [highLight, setHighLight] = useState([]);
-  const [categories, setCategories] = useState([]);
+function Sidebar({ data, page }) {
+  if (page === "home") {
+    return (
+      <DefaultChild>
+        <MenuList data={data.highlight_block} />
+        <MenuList data={data.menu_block} />
+        <TikiSeller />
+      </DefaultChild>
+    );
+  } else if (page === "search") {
+    return (
+      <DefaultChild>
+        {/* Categories */}
+        <MenuList data={data.category} />
 
-  useEffect(() => {
-    fetch("https://api.tiki.vn/raiden/v2/menu-config?platform=desktop")
-      .then((res) => res.json())
-      .then((res) => {
-        setHighLight(res.highlight_block);
-        setCategories(res.menu_block);
-      });
-    return () => {};
-  }, []);
+        {/* Location */}
+        <MenuList data={data.highlight_block} />
 
-  return (
-    <DefaultChild>
-      <MenuList data={highLight} />
-      <MenuList data={categories} />
-      <TikiSeller />
-    </DefaultChild>
-  );
+        {/* Service */}
+        <MenuList data={data.services} />
+
+        {/* Rate review */}
+        <MenuList data={data.rating} />
+
+        {/* Price*/}
+        <MenuList data={data.price} />
+
+        {/* Provider*/}
+        <MenuList data={data.seller} />
+
+        {/* Author*/}
+        <MenuList data={data.author} />
+
+        {/* Cover*/}
+        <MenuList data={data.book_cover} />
+
+        {/* Shipping*/}
+        <MenuList data={data.is_cross_border} />
+
+        {/* Ads CTA*/}
+        <MenuList data={data.highlight_block} />
+      </DefaultChild>
+    );
+  }
 }
 
 export default Sidebar;

@@ -1,9 +1,9 @@
 import { Stack, styled } from "@mui/material";
 import Footer from "components/Common/Footer";
-import Home from "features/products/pages/Home";
 // import Header from "components/Common/Header/Header.jsx";
 import Sidebar from "components/Common/Sidebar/Sidebar.jsx";
 import CusContainer from "components/Custom/MuiBase/CusContainer.jsx";
+import Search from "features/products/pages/Search/Search.jsx";
 import { useEffect, useState } from "react";
 
 const Wrapper = styled("main")(({ theme }) => ({
@@ -23,28 +23,42 @@ const ProductContainer = styled(Stack)(({ theme }) => ({
   width: "calc(100% - 254px)",
   overflow: "hidden",
 }));
-function HomePage() {
+function SearchPage() {
   const [dataSideBar, setDataSideBar] = useState([]);
 
   useEffect(() => {
-    fetch("https://api.tiki.vn/raiden/v2/menu-config?platform=desktop")
+    fetch(
+      `https://tiki.vn/api/v2/products?limit=40&include=advertisement&aggregations=2&q=mu%C3%B4n+ki%E1%BA%BFp+nh%C3%A2n+sinh`
+    )
       .then((res) => res.json())
       .then((res) => {
-        console.log(res);
-        setDataSideBar(res);
+        const service = res.filters.filter((a) => a.type === "service");
+        const back = res.filters
+          .filter((a) => a.type !== "service")
+          .reduce((a, b) => {
+            a[b["query_name"]] = b;
+            return a;
+          }, []);
+        const obService = {
+          display_name: "Dịch vụ",
+          values: service,
+          collaps: 5,
+        };
+        setDataSideBar(() => Object.assign(back, { services: obService }));
       });
     return () => {};
   }, []);
+  console.log(dataSideBar);
   return (
     <Wrapper>
       <Main>
         <Content>
           <Sidebar
             data={dataSideBar}
-            page={"home"}
+            page={"search"}
           />
           <ProductContainer>
-            <Home />
+            <Search />
             <Footer />
           </ProductContainer>
         </Content>
@@ -53,6 +67,6 @@ function HomePage() {
   );
 }
 
-HomePage.propTypes = {};
+SearchPage.propTypes = {};
 
-export default HomePage;
+export default SearchPage;

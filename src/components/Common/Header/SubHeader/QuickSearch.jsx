@@ -27,7 +27,7 @@ function QuickSearch({ data }) {
         data.length > 0 &&
         data.map((a) => (
           <QuickListItem
-            to={a.url}
+            to={`/${a.url.replace("https://tiki.vn/", "")}`}
             key={a.url}
           >
             {a.keyword}

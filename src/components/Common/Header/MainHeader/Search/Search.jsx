@@ -40,6 +40,7 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   "color": "inherit",
   "fontSize": "1.4rem",
+  "width": "100%",
   "flex": 1,
   "& .MuiInputBase-input": {
     height: "2.2rem",
@@ -49,7 +50,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     transition: theme.transitions.create("width"),
     width: "100%",
     [theme.breakpoints.up("sm")]: {
-      "width": "12ch",
+      "width": "100%",
       "&:focus": {
         width: "20ch",
       },
@@ -130,41 +131,46 @@ const Search = () => {
     if (!searchValue.startsWith(" ")) setSearchValue(e.target.value);
   };
   const handleHideResult = () => {
+    console.log("kakakaka");
     setShowResult(false);
   };
+
   return (
     <>
       <Input>
         <SearchIconWrapper>
           <SearchIcon />
         </SearchIconWrapper>
-        <TippyHeadless
-          placement="bottom-start"
-          interactive
-          visible={showResult}
-          maxWidth={821}
-          render={(attrs) => (
-            <SearchResult
-              // @ts-ignore
-              tabIndex="-1"
-              {...attrs}
-              searchResult={searchResult}
-              suggestion={suggestion}
-              hotKeys={hotKeys}
-              hotCategories={hotCategories}
-              collap={collap}
+        <span style={{ flex: 1 }}>
+          <TippyHeadless
+            placement="bottom-start"
+            interactive
+            visible={showResult}
+            maxWidth={821}
+            render={(attrs) => (
+              <SearchResult
+                // @ts-ignore
+                tabIndex="-1"
+                {...attrs}
+                searchResult={searchResult}
+                suggestion={suggestion}
+                hotKeys={hotKeys}
+                hotCategories={hotCategories}
+                collap={collap}
+                handleSearchItem={handleHideResult}
+              />
+            )}
+            onClickOutside={handleHideResult}
+          >
+            <StyledInputBase
+              ref={inputRef}
+              placeholder="Search…"
+              inputProps={{ "aria-label": "search" }}
+              onChange={(e) => handleOnChangeInput(e)}
+              onFocus={() => setShowResult(true)}
             />
-          )}
-          onClickOutside={handleHideResult}
-        >
-          <StyledInputBase
-            ref={inputRef}
-            placeholder="Search…"
-            inputProps={{ "aria-label": "search" }}
-            onChange={(e) => handleOnChangeInput(e)}
-            onFocus={() => setShowResult(true)}
-          />
-        </TippyHeadless>
+          </TippyHeadless>
+        </span>
         <SubmitSearch loading={showLoading}>Tim kiem</SubmitSearch>
       </Input>
     </>

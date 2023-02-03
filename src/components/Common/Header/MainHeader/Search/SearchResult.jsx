@@ -21,14 +21,14 @@ function SearchResult({
   hotKeys,
   hotCategories,
   collap,
+  handleSearchItem,
 }) {
   const [isSearching, setIsSearching] = useState(false);
   useEffect(() => {
     setIsSearching(searchResult && searchResult.length > 0);
   }, [searchResult]);
-  console.log(searchResult);
   return (
-    <Wrapper>
+    <Wrapper onClick={handleSearchItem}>
       {isSearching ? (
         searchResult.map((item) => (
           <SearchResultItem

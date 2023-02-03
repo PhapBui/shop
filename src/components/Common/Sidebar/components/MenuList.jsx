@@ -25,12 +25,24 @@ const List = styled(Box)(({ theme }) => ({
 }));
 
 function MenuList({ data }) {
+  console.log(data);
   return (
     <List>
-      {data.title && <div className="title">{data.title}</div>}
-      {data.items &&
-        data.items.length > 0 &&
-        data.items.map((item, idx) => {
+      {data?.title && <div className="title">{data?.title}</div>}
+      {data?.items &&
+        data?.items.length > 0 &&
+        data?.items.map((item, idx) => {
+          return (
+            <MenuItem
+              key={idx}
+              data={item}
+            />
+          );
+        })}
+      {data?.display_name && <div className="title">{data?.display_name}</div>}
+      {data?.values &&
+        data?.values.length > 0 &&
+        data?.values.map((item, idx) => {
           return (
             <MenuItem
               key={idx}

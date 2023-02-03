@@ -26,26 +26,40 @@ const Icon = styled("picture")(({ theme }) => ({
 }));
 
 function MenuItem({ data }) {
+  console.log(data);
+
   return (
     <Item>
-      <Link
-        className="link-item"
-        to={data.link.replace("https://tiki.vn/", "")}
-      >
-        <Icon>
-          <source
-            type="image/webp"
-            srcSet={data.icon_url}
-          />
-          <img
-            src={data.icon_url}
-            alt={data.text}
-            height={32}
-            width={32}
-          />
-        </Icon>
-        <div>{data.text}</div>
-      </Link>
+      {data.link && (
+        <Link
+          className="link-item"
+          to={`/${data.link?.replace("https://tiki.vn/", "")}`}
+          relative="path"
+        >
+          <Icon>
+            <source
+              type="image/webp"
+              srcSet={data.icon_url}
+            />
+            <img
+              src={data.icon_url}
+              alt={data.text}
+              height={32}
+              width={32}
+            />
+          </Icon>
+          <div>{data.text}</div>
+        </Link>
+      )}
+      {data.display_value && (
+        <Link
+          className="link-item"
+          to={`/search?q=ten-key&category=${data.query_value}`}
+          relative="path"
+        >
+          <div>{data.display_value}</div>
+        </Link>
+      )}
     </Item>
   );
 }
