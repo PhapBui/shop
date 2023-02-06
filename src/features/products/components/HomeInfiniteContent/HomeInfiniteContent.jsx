@@ -107,7 +107,7 @@ function HomeInfiniteContent(props) {
             <div
               key={product.default_spid}
               style={{
-                maxWidth: "183px",
+                maxWidth: "calc(16.6667% - 8px)",
                 flex: "1 1 calc(16.6667% - 8px)",
               }}
             >

@@ -23,8 +23,8 @@ const Item = styled(Link)(({ theme }) => ({
 }));
 
 const Thumbnail = styled("div")(({ theme }) => ({
-  "width": "183px",
-  "height": "183px",
+  "width": "100%",
+  "height": "auto",
   " & >img": {
     position: "absolute",
   },
