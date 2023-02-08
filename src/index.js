@@ -28,7 +28,13 @@ const theme = createTheme({
        },
        ul,li{
         list-style-type:none;
-       }
+       },
+       a{
+        text-decoration:none;
+       },
+       .MuiButtonBase-root{
+        text-transform:unset;
+       },
 
       `,
     },

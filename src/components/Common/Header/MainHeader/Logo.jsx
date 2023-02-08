@@ -1,5 +1,5 @@
 import { styled } from "@mui/material";
-import { logo512 } from "assets/images/index.js";
+import { Images } from "assets/images/index.js";
 import Image from "components/Custom/Etc/image.jsx";
 import { Link } from "react-router-dom";
 const Linkk = styled(Link)(({ theme }) => ({
@@ -13,7 +13,7 @@ function Logo(props) {
     <Linkk to={"/"}>
       <Image
         // @ts-ignore
-        src={logo512}
+        src={Images.logo512}
         alt="logo"
       />
     </Linkk>

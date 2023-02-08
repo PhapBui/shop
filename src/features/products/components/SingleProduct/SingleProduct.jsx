@@ -18,6 +18,7 @@ const Item = styled(Link)(({ theme }) => ({
   listStyleType: "none",
   textDecoration: "none",
   color: "rgb(128, 128, 137)",
+  width: "100%",
 
   fontSize: "1.2rem",
 }));
@@ -58,6 +59,12 @@ const Info = styled("div")(({ theme }) => ({
     "&>.quantity-sold": {
       display: "flex",
     },
+  },
+  "&>.badge-under-price": {
+    fontWeight: "400",
+    fontSize: "10px",
+    lineHeight: "150%",
+    minHeight: "30px",
   },
 }));
 
@@ -107,16 +114,16 @@ const Delivery = styled("div")(({ theme }) => ({
 }));
 
 function SingleProduct({ data }) {
-  const meta = data.badges_new.reduce((meta, badge) => {
+  const meta = data?.badges_new?.reduce((meta, badge) => {
     meta[badge.code] = badge;
     return meta;
   }, {});
   return (
     <Product onClick={() => console.log(data)}>
-      <Item to={data.url_path}>
+      <Item to={`/san-pham/${data.url_path}`}>
         <div>
           <Thumbnail className="thumbnail">
-            {meta.official_store?.icon && (
+            {meta && meta.official_store?.icon && (
               <img
                 src={meta.official_store?.icon}
                 alt={meta.official_store?.code}
@@ -132,10 +139,10 @@ function SingleProduct({ data }) {
             )}
             <div className="thumnail-wrapper">
               <picture className="webping-container">
-                <source srcSet={data.thumbnail_url} />
+                <source srcSet={data?.thumbnail_url} />
                 <img
-                  src={data.thumbnail_url}
-                  alt={data.name}
+                  src={data?.thumbnail_url}
+                  alt={data?.name}
                   style={{
                     width: "100%",
                     height: "100%",
@@ -150,52 +157,54 @@ function SingleProduct({ data }) {
           </Thumbnail>
           <Info>
             <div className="name">
-              <h3>{data.name}</h3>
+              <h3>{data?.name}</h3>
             </div>
             <div className="review">
               <div className="rating">
-                <div>{data.rating_average}</div>
+                <div>{data?.rating_average}</div>
 
                 <StarIcon style={{ color: "rgb(253, 216, 54)" }} />
               </div>
-              |<div className="quantity-sold">{data.quantity_sold.text}</div>
+              |<div className="quantity-sold">{data?.quantity_sold?.text}</div>
             </div>
             <Price
               className={`price-discount ${
-                data.discount_rate > 0 ? "has-discount" : ""
+                data?.discount_rate > 0 ? "has-discount" : ""
               }`}
             >
               <div className="price">
-                {data.price.toLocaleString("de-DE")} đ
+                {data?.price?.toLocaleString("de-DE")} đ
               </div>
-              {data.discount_rate > 0 && (
-                <div className="discount">-{data.discount_rate}%</div>
+              {data?.discount_rate > 0 && (
+                <div className="discount">-{data?.discount_rate}%</div>
               )}
             </Price>
             <div className="badge-under-price">
-              {meta.asa_reward_html_badge?.text?.split("<br/>")[0]}
+              {meta?.asa_reward_html_badge?.text?.split("<br/>")[0]}
               <br />
-              {meta.asa_reward_html_badge?.text?.split("<br/>")[1]}
+              {meta?.asa_reward_html_badge?.text?.split("<br/>")[1]}
             </div>
             <Rate>
-              {meta.installment?.text && (
-                <div className="item">{meta.installment?.text}</div>
+              {meta?.installment?.text && (
+                <div className="item">{meta?.installment?.text}</div>
               )}
-              {(meta.freeship_plus?.text || meta.option_color?.text) && (
+              {(meta?.freeship_plus?.text || meta?.option_color?.text) && (
                 <div className="item">
-                  {meta.freeship_plus?.text || meta.option_color?.text}
+                  {meta?.freeship_plus?.text || meta?.option_color?.text}
                 </div>
               )}
             </Rate>
           </Info>
           <Delivery className="badge-delivery">
             <img
-              src={meta.tikinow?.icon}
-              alt={meta.tikinow?.text}
-              height={meta.tikinow?.icon_height}
-              width={meta.tikinow?.icon_width}
+              src={meta?.tikinow?.icon}
+              alt={meta?.tikinow?.text}
+              height={meta?.tikinow?.icon_height}
+              width={meta?.tikinow?.icon_width}
             />
-            <span>{meta.tikinow?.text || meta.delivery_info_badge?.text}</span>
+            <span>
+              {meta?.tikinow?.text || meta?.delivery_info_badge?.text}
+            </span>
           </Delivery>
         </div>
       </Item>

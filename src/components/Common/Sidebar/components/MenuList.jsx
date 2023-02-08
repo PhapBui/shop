@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import MenuItem from "./MenuItem.jsx";
+import PropTypes from "prop-types";
 
 const List = styled(Box)(({ theme }) => ({
   "width": "100%",
@@ -14,7 +15,7 @@ const List = styled(Box)(({ theme }) => ({
   "& .MuiSvgIcon-root": {
     fontSize: "2.6rem",
   },
-  "&>.title": {
+  "&> .title": {
     color: "rgb(39, 39, 42)",
     marginBottom: "8px",
     paddingLeft: "16px",
@@ -24,9 +25,10 @@ const List = styled(Box)(({ theme }) => ({
   },
 }));
 
-function MenuList({ data }) {
-  console.log(data);
-  return (
+function MenuList({ data, children }) {
+  return children ? (
+    <List>{children}</List>
+  ) : (
     <List>
       {data?.title && <div className="title">{data?.title}</div>}
       {data?.items &&
@@ -53,5 +55,9 @@ function MenuList({ data }) {
     </List>
   );
 }
+MenuList.propTypes = {
+  data: PropTypes.object,
+  children: PropTypes.node,
+};
 
 export default MenuList;

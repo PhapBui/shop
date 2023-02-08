@@ -29,7 +29,7 @@ function SubHeader() {
   return (
     <SubHeaderContainer>
       <QuickSearch data={QuickSearchData} />
-      <Location />
+      <Location pretext={"Giao đến: "} />
     </SubHeaderContainer>
   );
 }

@@ -26,8 +26,6 @@ const Icon = styled("picture")(({ theme }) => ({
 }));
 
 function MenuItem({ data }) {
-  console.log(data);
-
   return (
     <Item>
       {data.link && (

@@ -1,5 +1,7 @@
 import Header from "components/Common/Header/Header.jsx";
+import CategoryPage from "Layouts/CategoryPage.js";
 import HomePage from "Layouts/HomePage.js";
+import ProductPage from "Layouts/ProductPage.js";
 import SearchPage from "Layouts/SearchPage.js";
 import { Route, Routes } from "react-router-dom";
 
@@ -18,6 +20,14 @@ function App() {
         <Route
           path="/search"
           element={<SearchPage />}
+        ></Route>
+        <Route
+          path="/:cateSlug/:cateName"
+          element={<CategoryPage />}
+        ></Route>
+        <Route
+          path="/san-pham/:productSlug"
+          element={<ProductPage />}
         ></Route>
       </Routes>
     </div>

@@ -23,7 +23,7 @@ const ProductContainer = styled(Stack)(({ theme }) => ({
   width: "calc(100% - 254px)",
   overflow: "hidden",
 }));
-function SearchPage() {
+function CategoryPage() {
   const [dataSideBar, setDataSideBar] = useState([]);
 
   useEffect(() => {
@@ -52,6 +52,7 @@ function SearchPage() {
     <Wrapper>
       <Main>
         <BreadCrumb />
+        <h1>Cate Page</h1>
         <Content>
           <Sidebar
             data={dataSideBar}
@@ -67,6 +68,6 @@ function SearchPage() {
   );
 }
 
-SearchPage.propTypes = {};
+CategoryPage.propTypes = {};
 
-export default SearchPage;
+export default CategoryPage;
