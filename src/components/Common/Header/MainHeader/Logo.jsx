@@ -13,7 +13,7 @@ function Logo(props) {
     <Linkk to={"/"}>
       <Image
         // @ts-ignore
-        src={Images.logo512}
+        src={`/${Images.logo512}`}
         alt="logo"
       />
     </Linkk>

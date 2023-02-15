@@ -8,11 +8,12 @@ import useFetch from "hooks/useFetch.js";
 
 const LocationContainer = styled(Stack)(({ theme }) => ({
   "flexDirection": "row",
-  "justifyContent": "flex-end",
+  "justifyContent": "flex-start",
   "alignItems": "center",
   "alignContent": "center",
   "cursor": "pointer",
   "fontSize": "1.4rem",
+  "columnGap": 6,
   "&>*": {
     whiteSpace: "nowrap",
   },
@@ -26,27 +27,46 @@ const LocationContainer = styled(Stack)(({ theme }) => ({
     textOverflow: "ellipsis",
     color: "rgb(39, 39, 42)",
   },
+  "&>.handle-location": {
+    border: "unset",
+    color: "rgb(11, 116, 229)",
+    fontSize: "1.6rem",
+    lineHeight: "2.4rem",
+    fontWeight: "600",
+    flexShrink: "0",
+  },
 }));
 
-function Location({ pretext }) {
+function Location({ pretext, aftertext = false }) {
   const locationData = useFetch(
     `https://api.tiki.vn/delivery/api/v2/location-detection`
   );
-
+  const handleChangeLocation = () => {
+    console.log("change location");
+  };
   return (
     <LocationContainer>
+      <h4 className="title">{pretext} </h4>
       <LocationOnOutlinedIcon className="location-icon" />
-      <h4 className="title">{pretext}</h4>
       <div className="address">
         {
           // @ts-ignore
           locationData?.data?.address_info
         }
       </div>
+      {aftertext && (
+        <span
+          className="handle-location"
+          onClick={handleChangeLocation}
+        >
+          Đổi địa chỉ
+        </span>
+      )}
     </LocationContainer>
   );
 }
 Location.propTypes = {
   pretext: PropTypes.string,
+  aftertext: PropTypes.bool,
 };
 export default Location;

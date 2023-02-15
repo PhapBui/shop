@@ -30,7 +30,6 @@ function HomePage() {
     fetch("https://api.tiki.vn/raiden/v2/menu-config?platform=desktop")
       .then((res) => res.json())
       .then((res) => {
-        console.log(res);
         setDataSideBar(res);
       });
     return () => {};

@@ -114,29 +114,29 @@ function SearchWidget({ data }) {
   return (
     <HotKey
       // @ts-ignore
-      className={data.code}
+      className={data?.code}
     >
       <div className="title">
-        {data.code === "hot_keywords" ? (
+        {data?.code === "hot_keywords" ? (
           <img
             src={
               "https://salt.tikicdn.com/ts/upload/4f/03/a0/2455cd7c0f3aef0c4fd58aa7ff93545a.png"
             }
-            alt={data.code}
+            alt={data?.code}
             className="trending"
           />
         ) : null}
-        <div>{data.title}</div>
+        <div>{data?.title}</div>
       </div>
       <ListItems className="content ">
-        {data.items &&
-          data.items.length > 0 &&
-          data.items.map((item, idx) => (
+        {data?.items &&
+          data?.items.length > 0 &&
+          data?.items.map((item, idx) => (
             <Link
               to={item.url.replace("https://tiki.vn/", "")}
               key={idx}
             >
-              {data.code === "hot_keywords" ? (
+              {data?.code === "hot_keywords" ? (
                 <img
                   src={item.thumbnail_url}
                   alt={item.title || item.name}
@@ -151,7 +151,7 @@ function SearchWidget({ data }) {
                   </div>
                 </div>
               )}
-              <div className={data.type}>{item.title || item.name}</div>
+              <div className={data?.type}>{item.title || item.name}</div>
             </Link>
           ))}
       </ListItems>

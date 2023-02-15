@@ -1,6 +1,6 @@
-import StarIcon from "@mui/icons-material/Star";
 import { styled } from "@mui/material";
 import { Link } from "react-router-dom";
+import StarIcon from "@mui/icons-material/Star";
 
 const Product = styled("div")(({ theme }) => ({
   textDecoration: "none",
@@ -48,6 +48,7 @@ const Info = styled("div")(({ theme }) => ({
     "&>h3": {
       color: "rgb(39, 39, 42)",
       fontSize: "1.2rem",
+      fontWeight: 400,
     },
   },
   "&>.review": {
@@ -87,39 +88,13 @@ const Price = styled("div")(({ theme }) => ({
   },
 }));
 
-const Rate = styled("div")(({ theme }) => ({
-  "display": "flex",
-  "gap": "4px",
-  "flexWrap": "wrap",
-  "marginTop": "6px",
-  "minHeight": "17px",
-  "&>.item": {
-    padding: "2px 4px",
-    border: "0.5px solid rgb(10, 104, 255)",
-    borderRadius: "2px",
-    fontWeight: 400,
-    fontSize: "10px",
-    lineHeight: "12px",
-    color: "rgb(10, 104, 255)",
-  },
-}));
-
-const Delivery = styled("div")(({ theme }) => ({
-  display: "flex",
-  flexDirection: "row",
-  alignItems: "center",
-  flexWrap: "wrap",
-  gap: 4,
-  padding: "8px 12px",
-}));
-
-function SingleProduct({ data }) {
+function ProductItem({ data }) {
   const meta = data?.badges_new?.reduce((meta, badge) => {
     meta[badge.code] = badge;
     return meta;
   }, {});
   return (
-    <Product>
+    <Product onClick={() => console.log(data)}>
       <Item to={`/san-pham/${data.url_path}`}>
         <div>
           <Thumbnail className="thumbnail">
@@ -156,17 +131,6 @@ function SingleProduct({ data }) {
             </div>
           </Thumbnail>
           <Info>
-            <div className="name">
-              <h3>{data?.name}</h3>
-            </div>
-            <div className="review">
-              <div className="rating">
-                <div>{data?.rating_average}</div>
-
-                <StarIcon style={{ color: "rgb(253, 216, 54)" }} />
-              </div>
-              |<div className="quantity-sold">{data?.quantity_sold?.text}</div>
-            </div>
             <Price
               className={`price-discount ${
                 data?.discount_rate > 0 ? "has-discount" : ""
@@ -179,39 +143,24 @@ function SingleProduct({ data }) {
                 <div className="discount">-{data?.discount_rate}%</div>
               )}
             </Price>
-            <div className="badge-under-price">
-              {meta?.asa_reward_html_badge?.text?.split("<br/>")[0]}
-              <br />
-              {meta?.asa_reward_html_badge?.text?.split("<br/>")[1]}
+            <div className="name">
+              <h3>{data?.name}</h3>
             </div>
-            <Rate>
-              {meta?.installment?.text && (
-                <div className="item">{meta?.installment?.text}</div>
-              )}
-              {(meta?.freeship_plus?.text || meta?.option_color?.text) && (
-                <div className="item">
-                  {meta?.freeship_plus?.text || meta?.option_color?.text}
-                </div>
-              )}
-            </Rate>
+            <div className="review">
+              <div className="rating">
+                <div>{data?.rating_average}</div>
+
+                <StarIcon style={{ color: "rgb(253, 216, 54)" }} />
+              </div>
+              |<div className="quantity-sold">{data?.quantity_sold?.text}</div>
+            </div>
           </Info>
-          <Delivery className="badge-delivery">
-            <img
-              src={meta?.tikinow?.icon}
-              alt={meta?.tikinow?.text}
-              height={meta?.tikinow?.icon_height}
-              width={meta?.tikinow?.icon_width}
-            />
-            <span>
-              {meta?.tikinow?.text || meta?.delivery_info_badge?.text}
-            </span>
-          </Delivery>
         </div>
       </Item>
     </Product>
   );
 }
 
-SingleProduct.propTypes = {};
+ProductItem.propTypes = {};
 
-export default SingleProduct;
+export default ProductItem;
