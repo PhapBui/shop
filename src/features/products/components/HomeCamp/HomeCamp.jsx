@@ -1,6 +1,11 @@
 // @ts-nocheck
 import { Box, styled } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "app/hooks.js";
 import SlickCarousel from "components/Custom/Carousel/SlickCarousel.jsx";
+import {
+  productActions,
+  selectHomeCamp,
+} from "features/products/productsSlice.js";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -27,32 +32,36 @@ const HomeCampWrapper = styled(Box)(({ theme }) => ({
   },
 }));
 
+const _settings = {
+  infinite: true,
+  speed: 500,
+  slidesToScroll: 3,
+  slidesToShow: 3,
+  // slidesToShow: 3,
+};
+
 function HomeCamp() {
   const [title, setTitle] = useState("");
   const [brands, setBrands] = useState([]);
-  useEffect(() => {
-    fetch(
-      "https://tka.tiki.vn/widget/api/v1/banners-group?group=msp_widget_banner_left&group=msp_widget_banner_right_top&group=msp_widget_banner_right_bottom"
-    )
-      .then((res) => res.json())
-      .then((res) => {
-        setTitle(res.data[0]?.title?.text);
-        setBrands(res.data);
-      });
-  }, []);
-  const items = brands?.reduce((a, b) => {
-    a[b.group] = b.banners;
-    return a;
-  }, {});
+  const [items, setItems] = useState([]);
 
-  const _settings = {
-    infinite: true,
-    speed: 500,
-    slidesToScroll: 3,
-    slidesToShow: 3,
-    // slidesToShow: 3,
-  };
-  const itemLeft = items?.msp_widget_banner_left;
+  const dispatch = useAppDispatch();
+  const productData = useAppSelector(selectHomeCamp);
+
+  useEffect(() => {
+    dispatch(productActions.fetchProductsList);
+  }, [dispatch]);
+
+  useEffect(() => {
+    const items = productData?.data?.reduce((a, b) => {
+      a[b.group] = b;
+      return a;
+    }, {});
+    setBrands(items);
+    setItems(items?.msp_widget_banner_left.banners);
+    setTitle(items?.msp_widget_banner_left.title.text);
+  }, [productData]);
+
   return (
     <HomeCampWrapper>
       <h2
@@ -70,9 +79,9 @@ function HomeCamp() {
         {title}
       </h2>
       <SlickCarousel settings={_settings}>
-        {itemLeft &&
-          itemLeft.length > 0 &&
-          itemLeft.map((item, idx) => (
+        {items &&
+          items.length > 0 &&
+          items.map((item, idx) => (
             <div
               className="wrapper"
               key={item.id}
@@ -103,13 +112,19 @@ function HomeCamp() {
                   <div className="top">
                     <Link
                       className="item"
-                      to={items?.msp_widget_banner_right_top[
+                      to={brands?.msp_widget_banner_right_top.banners[
                         idx
                       ]?.title?.replace("https://tiki.vn", "")}
                     >
                       <img
-                        src={items?.msp_widget_banner_right_top[idx]?.image_url}
-                        alt={items?.msp_widget_banner_right_top[idx]?.title}
+                        src={
+                          brands?.msp_widget_banner_right_top.banners[idx]
+                            ?.image_url
+                        }
+                        alt={
+                          brands?.msp_widget_banner_right_top.banners[idx]
+                            ?.title
+                        }
                         style={{ maxHeight: 129 }}
                       />
                     </Link>
@@ -117,15 +132,19 @@ function HomeCamp() {
                   <div className="bottom">
                     <Link
                       className="item"
-                      to={items?.msp_widget_banner_right_bottom[
+                      to={brands?.msp_widget_banner_right_bottom.banners[
                         idx
                       ]?.title?.replace("https://tiki.vn", "")}
                     >
                       <img
                         src={
-                          items?.msp_widget_banner_right_bottom[idx]?.image_url
+                          brands?.msp_widget_banner_right_bottom.banners[idx]
+                            ?.image_url
                         }
-                        alt={items?.msp_widget_banner_right_bottom[idx]?.title}
+                        alt={
+                          brands?.msp_widget_banner_right_bottom.banners[idx]
+                            ?.title
+                        }
                         style={{ maxHeight: 129 }}
                       />
                     </Link>

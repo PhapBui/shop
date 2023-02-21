@@ -66,43 +66,45 @@ const Astra = styled("div")(({ color }) => ({
 const Price = ({ data }) => {
   return (
     <Wrapper>
-      <ProductPrice>
-        <div className="price">
-          <div
-            className={`current-price ${
-              data?.discount_rate > 0 ? "has-discount" : ""
-            }`}
-          >
-            {data?.price?.toLocaleString("de-DE")} đ
-          </div>
-          {data?.discount_rate > 0 && (
-            <div className="orignal-price">
-              {data?.originalPrice?.toLocaleString("de-DE")} đ
+      {data && (
+        <ProductPrice>
+          <div className="price">
+            <div
+              className={`current-price ${
+                data?.discount_rate > 0 ? "has-discount" : ""
+              }`}
+            >
+              {data?.price?.toLocaleString("de-DE")} đ
             </div>
-          )}
-          {data?.discount_rate > 0 && (
-            <div className="discount-rate">{data?.discount_rate} %</div>
-          )}
-        </div>
-        <Astra
-          className="astra"
-          color={data?.astra.text_color}
-        >
-          <div className="content">
+            {data?.discount_rate > 0 && (
+              <div className="orignal-price">
+                {data?.originalPrice?.toLocaleString("de-DE")} đ
+              </div>
+            )}
+            {data?.discount_rate > 0 && (
+              <div className="discount-rate">{data?.discount_rate} %</div>
+            )}
+          </div>
+          <Astra
+            className="astra"
+            color={data?.astra.text_color}
+          >
+            <div className="content">
+              <img
+                src={data?.astra.icon.url}
+                height={data?.astra.icon.height}
+                width={data?.astra.icon.width}
+                alt="astra"
+              />
+              <span>{data?.astra.text}</span>
+            </div>
             <img
-              src={data?.astra.icon.url}
-              height={data?.astra.icon.height}
-              width={data?.astra.icon.width}
+              src={data?.astra.asa_plus_badge}
               alt="astra"
             />
-            <span>{data?.astra.text}</span>
-          </div>
-          <img
-            src={data?.astra.asa_plus_badge}
-            alt="astra"
-          />
-        </Astra>
-      </ProductPrice>
+          </Astra>
+        </ProductPrice>
+      )}
     </Wrapper>
   );
 };

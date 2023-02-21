@@ -5,6 +5,9 @@ import HomeIcon from "@mui/icons-material/Home";
 import DiamondIcon from "@mui/icons-material/Diamond";
 import FaceRetouchingNaturalIcon from "@mui/icons-material/FaceRetouchingNatural";
 import LocalGroceryStoreOutlinedIcon from "@mui/icons-material/LocalGroceryStoreOutlined";
+import TippyHeadless from "@tippyjs/react/headless";
+import Cart from "../cart/cart.jsx";
+
 const UserShortcutContainer = styled(Stack)(({ theme }) => ({
   flexDirection: "row",
   alignItems: "center",
@@ -68,10 +71,18 @@ function UserShortcut() {
         <FaceRetouchingNaturalIcon />
         Tai Khoan
       </MenuNavLink>
-      <MenuNavLink to="/gio-hang">
-        <LocalGroceryStoreOutlinedIcon className="store" />
-        <span className="item-qty">0</span>
-      </MenuNavLink>
+      <TippyHeadless
+        placement="bottom-end"
+        interactive
+        visible
+        maxWidth={821}
+        render={(attrs) => <Cart />}
+      >
+        <MenuNavLink to="/gio-hang">
+          <LocalGroceryStoreOutlinedIcon className="store" />
+          <span className="item-qty">0</span>
+        </MenuNavLink>
+      </TippyHeadless>
     </UserShortcutContainer>
   );
 }

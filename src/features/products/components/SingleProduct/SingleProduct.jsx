@@ -1,5 +1,6 @@
 import StarIcon from "@mui/icons-material/Star";
 import { styled } from "@mui/material";
+import { memo } from "react";
 import { Link } from "react-router-dom";
 
 const Product = styled("div")(({ theme }) => ({
@@ -214,4 +215,4 @@ function SingleProduct({ data }) {
 
 SingleProduct.propTypes = {};
 
-export default SingleProduct;
+export default memo(SingleProduct);

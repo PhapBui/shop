@@ -103,7 +103,7 @@ const HotKey = styled("div")(({ theme, column, gap, borderTop }) => ({
     display: "flex",
     WebkitBoxAlign: "center",
     alignItems: "center",
-    fontSize: "15px",
+    fontSize: "1.5rem",
     lineHeight: "24px",
     padding: "0px 0px 8px",
   },

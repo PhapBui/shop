@@ -4,7 +4,12 @@ import { useEffect, useState } from "react";
 
 import SlickCarousel from "components/Custom/Carousel/SlickCarousel.jsx";
 
-import axios from "axios";
+import productTikiApi from "api/tiki/productTikiApi.js";
+import { useAppDispatch, useAppSelector } from "app/hooks.js";
+import {
+  productActions,
+  selectHomeHotDeal,
+} from "features/products/productsSlice.js";
 import { Link } from "react-router-dom";
 import ProductCard from "./ProductCard.jsx";
 import Products from "./ProductsData.js";
@@ -42,19 +47,29 @@ const settings = {
 
 function HomeDeal() {
   const [products, setProducts] = useState(() => Products);
+  const [timeStamp, setTimeStamp] = useState(0);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(
-          "https://api.tiki.vn/v2/widget/deals/collection?per_page=12"
-        );
+        const res = await productTikiApi.getHomeHotDeal();
         if (res.data.length > 0) setProducts(res.data);
+        setTimeStamp(
+          res.data[0].special_to_date - new Date(res.datetime).getTime() / 1000
+        );
       } catch (error) {
         console.log("fail to fetch hot deal data: ", error);
       }
     };
     fetchData();
   }, []);
+
+  const dispatch = useAppDispatch();
+  const productss = useAppSelector(selectHomeHotDeal);
+  useEffect(() => {
+    dispatch(productActions.fetchHomeHotDeal());
+  }, [dispatch]);
+  if (productss && productss.length > 0) console.log(productss);
 
   return (
     <HomeDealWrapper>
@@ -82,7 +97,7 @@ function HomeDeal() {
         >
           <DealTitle>Giá sốc hôm nay</DealTitle>
           <TimeCountDown>
-            <Timer timelife={1200} />
+            <Timer timelife={timeStamp} />
           </TimeCountDown>
         </div>
         <Link

@@ -1,6 +1,11 @@
 // @ts-nocheck
 import { Box, Card, CardMedia, Stack, styled } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "app/hooks.js";
 import SlickCarousel from "components/Custom/Carousel/SlickCarousel.jsx";
+import {
+  productActions,
+  selectHomeCollection,
+} from "features/products/productsSlice.js";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -38,16 +43,19 @@ const settings = {
 
 function HomeCollection() {
   const [title, setTitle] = useState("");
-  const [brands, setBrands] = useState([]);
+  const [items, setItems] = useState([]);
+  const dispatch = useAppDispatch();
+  const product = useAppSelector(selectHomeCollection);
   useEffect(() => {
-    fetch("https://api.tiki.vn/raiden/v2/collections?page=1&per_page=20")
-      .then((res) => res.json())
-      .then((res) => {
-        setTitle(res.title);
-        // setBrands((prev) => [...prev, ...res.data[0].banners]);
-        setBrands(res.items);
-      });
-  }, []);
+    dispatch(productActions.fetchProductsList());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (product.length > 0) {
+      setTitle(product[0].title);
+      setItems(product[0].items);
+    }
+  }, [product]);
   return (
     <HomeBrandWrapper>
       {title && (
@@ -71,9 +79,9 @@ function HomeCollection() {
       )}
 
       <SlickCarousel settings={settings}>
-        {brands &&
-          brands.length > 0 &&
-          brands.map((brand, i) => (
+        {items &&
+          items.length > 0 &&
+          items.map((brand, i) => (
             <Link
               key={i}
               to={brand.title?.replace("https://tiki.vn/", "")}

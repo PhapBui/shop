@@ -18,7 +18,7 @@ const HeaderTitle = styled("h3")(({ theme }) => ({
   lineHeight: "150%",
   textTransform: "unset",
   marginBottom: "0px",
-  marginTop: "0px",
+  marginTop: "16px",
   borderRadius: "8px 8px 0px 0px",
 }));
 

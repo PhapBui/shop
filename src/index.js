@@ -8,6 +8,7 @@ import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import ScrollToTop from "components/Custom/ScrollToTop/ScrollToTop.jsx";
 const theme = createTheme({
   components: {
     MuiCssBaseline: {
@@ -46,10 +47,12 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <App />
-        </ThemeProvider>
+        <ScrollToTop>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <App />
+          </ThemeProvider>
+        </ScrollToTop>
       </BrowserRouter>
     </Provider>
   </React.StrictMode>

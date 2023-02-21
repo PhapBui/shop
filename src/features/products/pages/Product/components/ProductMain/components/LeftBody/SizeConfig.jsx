@@ -74,29 +74,31 @@ const SizeConfig = ({ data }) => {
   };
   return (
     <Wrapper className="size-config">
-      <div className="content">
-        <div className="title">
-          {`${data && data.size[0]?.name}: `}
-          <span>{product}</span>
+      {data && (
+        <div className="content">
+          <div className="title">
+            {`${data && data.size[0]?.name}: `}
+            <span>{product}</span>
+          </div>
+          <div className="option">
+            {data &&
+              data.size[0]?.values.map((item, idx) => (
+                <button
+                  className={`item ${item.label === product ? "active" : ""}`}
+                  onClick={() => handleChangeProduct(item)}
+                  key={idx}
+                >
+                  {item.label}
+                  <img
+                    className="selected-indicator"
+                    src="https://frontend.tikicdn.com/_desktop-next/static/img/pdp_revamp_v2/selected-variant-indicator.svg"
+                    alt="Selected"
+                  ></img>
+                </button>
+              ))}
+          </div>
         </div>
-        <div className="option">
-          {data &&
-            data.size[0]?.values.map((item, idx) => (
-              <button
-                className={`item ${item.label === product ? "active" : ""}`}
-                onClick={() => handleChangeProduct(item)}
-                key={idx}
-              >
-                {item.label}
-                <img
-                  className="selected-indicator"
-                  src="https://frontend.tikicdn.com/_desktop-next/static/img/pdp_revamp_v2/selected-variant-indicator.svg"
-                  alt="Selected"
-                ></img>
-              </button>
-            ))}
-        </div>
-      </div>
+      )}
     </Wrapper>
   );
 };

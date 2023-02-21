@@ -1,4 +1,5 @@
 import Header from "components/Common/Header/Header.jsx";
+import Register from "features/auth/index.jsx";
 import CategoryPage from "Layouts/CategoryPage.js";
 import HomePage from "Layouts/HomePage.js";
 import ProductPage from "Layouts/ProductPage.js";
@@ -28,6 +29,10 @@ function App() {
         <Route
           path="/san-pham/:productSlug"
           element={<ProductPage />}
+        ></Route>
+        <Route
+          path="/register"
+          element={<Register />}
         ></Route>
       </Routes>
     </div>

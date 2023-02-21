@@ -1,6 +1,7 @@
 import createSagaMiddleware from "@redux-saga/core";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { connectRouter, routerMiddleware } from "connected-react-router";
+import cartReducer from "components/Common/Header/cart/cartSlice.js";
 import productReducer from "../features/products/productsSlice.js";
 import { history } from "../utils";
 import rootSaga from "./rootSaga.js";
@@ -8,6 +9,7 @@ import rootSaga from "./rootSaga.js";
 const rootReducer = combineReducers({
   router: connectRouter(history),
   products: productReducer,
+  cart: cartReducer,
 });
 const sagaMiddleware = createSagaMiddleware();
 export const store = configureStore({

@@ -96,85 +96,89 @@ function ProductMain({ dataRight, dataLeft }) {
   };
   return (
     <ProductMainWrapper>
-      <ProductMainImage>
-        <div className="group-images">
-          <div className="thumbnail">
-            <div className="container">
-              <picture>
-                <source
-                  type="image/webp"
-                  srcSet={thumnailUrl || dataLeft.thumbnail}
-                />
-                <img
-                  src={thumnailUrl || dataLeft.thumbnail}
-                  alt="product"
-                />
-              </picture>
-            </div>
-          </div>
-        </div>
-        <div className="review-images">
-          <div className="image-list">
-            {dataLeft &&
-              // eslint-disable-next-line array-callback-return
-              dataLeft.images?.map((image, idx) => {
-                if (idx < 5)
-                  return (
-                    <button
-                      key={idx}
-                      type="button"
-                      onClick={() => handleThumbmailProduct(image, idx)}
-                      className={active === idx ? "active" : ""}
-                    >
-                      <picture>
-                        <source
-                          type="image/webp"
-                          srcSet={image.thumbnail_url}
-                        />
-                        <img
-                          key={idx}
-                          src={image.thumbnail_url}
-                          alt={image.thumbnail_url}
-                        />
-                      </picture>
-                    </button>
-                  );
-              })}
-            {dataLeft?.images && (
-              <button
-                type="button"
-                onClick={() => handleThumbmailProduct(dataLeft?.images[5], 5)}
-                className={active === 5 ? "active" : ""}
-              >
+      {dataLeft && (
+        <ProductMainImage>
+          <div className="group-images">
+            <div className="thumbnail">
+              <div className="container">
                 <picture>
                   <source
                     type="image/webp"
-                    srcSet={dataLeft.images[5]?.thumbnail_url}
+                    srcSet={thumnailUrl || dataLeft.thumbnail}
                   />
-                  <img
-                    src={dataLeft?.images[5]?.thumbnail_url}
-                    alt={dataLeft?.images[5]?.thumbnail_url}
-                  />
+                  {(thumnailUrl || dataLeft.thumbnail) && (
+                    <img
+                      src={thumnailUrl || dataLeft.thumbnail}
+                      alt="product"
+                    />
+                  )}
                 </picture>
-                <span
-                  style={{
-                    display: "block",
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%,-50%)",
-                    zIndex: 9,
-                  }}
-                >
-                  Xem them
-                </span>
-              </button>
-            )}
+              </div>
+            </div>
           </div>
-        </div>
-        <div className="social-share"></div>
-        <div className="track-banner"></div>
-      </ProductMainImage>
+          <div className="review-images">
+            <div className="image-list">
+              {dataLeft &&
+                // eslint-disable-next-line array-callback-return
+                dataLeft.images?.map((image, idx) => {
+                  if (idx < 5)
+                    return (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => handleThumbmailProduct(image, idx)}
+                        className={active === idx ? "active" : ""}
+                      >
+                        <picture>
+                          <source
+                            type="image/webp"
+                            srcSet={image.thumbnail_url}
+                          />
+                          <img
+                            key={idx}
+                            src={image.thumbnail_url}
+                            alt={image.thumbnail_url}
+                          />
+                        </picture>
+                      </button>
+                    );
+                })}
+              {dataLeft?.images && (
+                <button
+                  type="button"
+                  onClick={() => handleThumbmailProduct(dataLeft?.images[5], 5)}
+                  className={active === 5 ? "active" : ""}
+                >
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcSet={dataLeft.images[5]?.thumbnail_url}
+                    />
+                    <img
+                      src={dataLeft?.images[5]?.thumbnail_url}
+                      alt={dataLeft?.images[5]?.thumbnail_url}
+                    />
+                  </picture>
+                  <span
+                    style={{
+                      display: "block",
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%,-50%)",
+                      zIndex: 9,
+                    }}
+                  >
+                    Xem them
+                  </span>
+                </button>
+              )}
+            </div>
+          </div>
+          <div className="social-share"></div>
+          <div className="track-banner"></div>
+        </ProductMainImage>
+      )}
 
       {dataRight && (
         <ProductMainBody>

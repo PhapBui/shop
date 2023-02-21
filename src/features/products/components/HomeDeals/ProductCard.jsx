@@ -34,8 +34,8 @@ const DealPriceDiscount = styled("span")(({ theme }) => ({
 }));
 
 const DealQty = styled("div")(({ theme }) => ({
-  "backgroundColor": "#ffdbde",
-  "color": "#ff424e",
+  "backgroundColor": "rgb(255, 170, 175)",
+  "color": "rgb(255, 255, 255)",
   "borderRadius": "10px",
   "position": "relative",
   "display": "flex",
@@ -49,6 +49,18 @@ const DealQty = styled("div")(({ theme }) => ({
     height: "20px",
     borderRadius: "10px",
     minWidth: "20px",
+  },
+  "&>span": {
+    fontSize: "11px",
+    lineHeight: "16px",
+    padding: "0px 0px 0px 6px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100%",
+    width: "100%",
+    position: "absolute",
+    textAlign: "center",
   },
 }));
 
@@ -87,7 +99,7 @@ function ProductCard({ data, progress }) {
           className="deals__progress"
           style={{ width: progress.ordered_percent }}
         ></div>
-        <span>{progress.text}</span>
+        <span>{progress.progress_text}</span>
         {progress.is_hot_flag && (
           <FireIcon
             style={{

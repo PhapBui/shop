@@ -1,5 +1,10 @@
 import { styled } from "@mui/material";
-import React from "react";
+import { useAppDispatch, useAppSelector } from "app/hooks.js";
+import {
+  cartActions,
+  addToCart,
+} from "components/Common/Header/cart/cartSlice.js";
+import React, { useState } from "react";
 
 const Wrapper = styled("div")({
   "&>.label": {
@@ -101,7 +106,24 @@ const Wrapper = styled("div")({
 });
 
 const AddToCart = () => {
-  const handleProductQuantily = () => {};
+  const [quantily, setQuantily] = useState(1);
+  const count = useAppSelector(addToCart);
+  console.log(count[0]?.quantily);
+  const dispatch = useAppDispatch();
+
+  const handleProductQuantily = (e) => {
+    setQuantily(e.target.value);
+  };
+  const data = {
+    quantily,
+    price: 200,
+    name: "ga",
+    id: 1,
+  };
+  const handleAddToCart = () => {
+    dispatch(cartActions.addToCart(data));
+    setQuantily(1);
+  };
   return (
     <Wrapper>
       <p className="label">Số lượng</p>
@@ -115,10 +137,10 @@ const AddToCart = () => {
           />
         </button>
         <input
-          type="text"
+          type="number"
           className="input"
-          value="1"
-          onChange={handleProductQuantily}
+          value={quantily}
+          onChange={(e) => handleProductQuantily(e)}
         />
         <button>
           <img
@@ -134,6 +156,7 @@ const AddToCart = () => {
           type="button"
           className="btn btn-add-to-cart"
           data-view-id="pdp_add_to_cart_button"
+          onClick={handleAddToCart}
         >
           Chọn mua
         </button>

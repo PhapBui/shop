@@ -1,121 +1,84 @@
-import axios from "axios";
-import * as React from "react";
-import { useRef } from "react";
-import { useState } from "react";
-import { useEffect } from "react";
+// @ts-nocheck
+import { styled } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "app/hooks.js";
+import {
+  productActions,
+  selectHomeInfinite,
+} from "features/products/productsSlice.js";
+import { useEffect, useRef, useState } from "react";
 import SingleProduct from "../SingleProduct/SingleProduct.jsx";
 import ProductHeader from "./Header.jsx";
 
+const Wrapper = styled("div")({
+  "marginTop": 16,
+  "borderRadius": 8,
+  "background": "rgb(245, 245, 250)",
+  "& .home-infinite-content": {
+    "display": "flex",
+    "flexWrap": "wrap",
+    "flexDirection": "row",
+    "gap": 8,
+
+    "&>.product-item": {
+      maxWidth: "calc(16.6667%)",
+      flex: "1 1 calc(16.6667% - 8px)",
+    },
+  },
+});
+
 function HomeInfiniteContent(props) {
-  const productsRef = useRef();
+  const dispatch = useAppDispatch();
+  const productData = useAppSelector(selectHomeInfinite);
 
-  const [headerItem, setHeaderItem] = useState([]);
-  const [isFixed, setIsFixed] = useState(false);
-  const [tabs, setTabs] = useState([]);
-
+  const [products, setProducts] = useState([]);
   const [tabActive, setTabActive] = useState("");
 
-  const [products, setProducts] = useState(() => {
-    if (tabs && tabs.length > 0) {
-      return tabs[0].items;
-    }
-  });
-  const [headerStyles, setHeaderStyles] = useState(() => ({
-    position: "sticky",
-    top: "0px",
-    zIndex: 997,
-    width: "auto",
-    paddingTop: "0px",
-  }));
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await axios.get(
-          `https://tiki.vn/api/personalish/v1/blocks/collections?block_code=infinite_scroll&page_size=36&version=home-revamp&`
-        );
-        setHeaderItem(res.data);
-        setTabs(res.data?.tabs);
-        setProducts(res.data?.tabs[0]?.items);
-        setTabActive(res.data?.tabs[0]?.title);
-      } catch (error) {
-        console.log("fail to fetch data: ", error);
-      }
-    };
-    fetchData();
-  }, []);
+    dispatch(productActions.fetchProductsList());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (productData.tabs) {
+      setProducts(productData.tabs[0]);
+      setTabActive(productData.tabs[0].title);
+    }
+  }, [productData]);
+  const productsRef = useRef();
+
   const handleNavigate = (e, i) => {
     e.preventDefault();
-    if (tabs[i].title !== tabActive) setTabActive(tabs[i].title);
-    setProducts(tabs[i].items);
+    setProducts(productData.tabs[i]);
+    setTabActive(productData.tabs[i].title);
   };
-
-  useEffect(() => {
-    const handleScroll = () => {
-      // @ts-ignore
-      setIsFixed(productsRef?.current?.getBoundingClientRect().top > 16);
-      if (isFixed) {
-        setHeaderStyles((prev) => ({
-          ...prev,
+  return (
+    <Wrapper ref={productsRef}>
+      <ProductHeader
+        style={{
           position: "sticky",
+          top: "0px",
+          zIndex: 997,
           width: "auto",
           paddingTop: "0px",
-        }));
-      } else {
-        setHeaderStyles((prev) => ({
-          ...prev,
-          position: "fixed",
-          width: "calc(1138px)",
-          paddingTop: "16px",
-        }));
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [isFixed]);
-
-  return (
-    <div
-      ref={productsRef}
-      style={{
-        marginTop: 16,
-        borderRadius: 8,
-        background: "rgb(245, 245, 250)",
-      }}
-    >
-      <ProductHeader
-        style={headerStyles}
-        tabs={tabs}
+        }}
+        tabs={productData.tabs}
         // @ts-ignore
-        title={headerItem.title}
+        title={productData.title}
         handleNavigate={handleNavigate}
         tabActive={tabActive}
       />
-      <div
-        className="home__infinite_content"
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          flexDirection: "row",
-          gap: 8,
-        }}
-      >
-        {products &&
-          products.length > 0 &&
-          products.map((product, i) => (
+      <div className="home-infinite-content">
+        {products?.items &&
+          products?.items?.length > 0 &&
+          products?.items?.map((product, i) => (
             <div
               key={product.default_spid}
-              style={{
-                maxWidth: "calc(16.6667% - 8px)",
-                flex: "1 1 calc(16.6667% - 8px)",
-              }}
+              className="product-item"
             >
               <SingleProduct data={product} />
             </div>
           ))}
       </div>
-    </div>
+    </Wrapper>
   );
 }
 

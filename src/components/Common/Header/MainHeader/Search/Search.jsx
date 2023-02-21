@@ -6,6 +6,7 @@ import TippyHeadless from "@tippyjs/react/headless";
 import axios from "axios";
 import useDebounce from "hooks/useDebounce.js";
 import { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import SearchResult from "./SearchResult.jsx";
 
 const Input = styled("div")(({ theme }) => ({
@@ -115,9 +116,15 @@ const Search = () => {
         const res = await axios.get(`https://tiki.vn/api/v2/search/suggestion`);
         if (res) {
           setSuggestion(res.data?.data);
-          setHotKeys(res.data?.widgets[0]);
-          setHotCategories(res.data?.widgets[1]);
           setCollap(res.data?.data_collapsed);
+
+          const widgets = res.data?.widgets.reduce((a, b) => {
+            a[b.code] = b;
+            return a;
+          }, {});
+
+          setHotKeys(widgets.hot_keywords);
+          setHotCategories(widgets.hot_categories);
         }
       } catch (error) {
         console.log("fail to fetch Search Suggest data: ", error);
@@ -131,9 +138,14 @@ const Search = () => {
     if (!searchValue.startsWith(" ")) setSearchValue(e.target.value);
   };
   const handleHideResult = () => {
-    console.log("kakakaka");
     setShowResult(false);
   };
+
+  const location = useLocation();
+
+  useEffect(() => {
+    handleHideResult();
+  }, [location]);
 
   return (
     <>
@@ -157,7 +169,6 @@ const Search = () => {
                 hotKeys={hotKeys}
                 hotCategories={hotCategories}
                 collap={collap}
-                handleSearchItem={handleHideResult}
               />
             )}
             onClickOutside={handleHideResult}

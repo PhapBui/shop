@@ -21,7 +21,6 @@ const Content = styled("div")(({ theme }) => ({
 }));
 const ProductContainer = styled(Stack)(({ theme }) => ({
   width: "calc(100% - 254px)",
-  overflow: "hidden",
 }));
 function HomePage() {
   const [dataSideBar, setDataSideBar] = useState([]);

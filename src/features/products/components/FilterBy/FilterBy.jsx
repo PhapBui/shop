@@ -56,7 +56,6 @@ function FilterBy() {
     };
     fetchFilterOption();
   }, []);
-  console.log(filterOption);
   return (
     <FilterWrapper>
       {filterOption &&

@@ -1,5 +1,5 @@
 import { styled } from "@mui/material/styles";
-import { Images } from "assets/images/index.js";
+import images from "assets/images/index.js";
 import PropTypes from "prop-types";
 import { forwardRef, useState } from "react";
 const Img = styled("img")(({ theme }) => ({
@@ -8,7 +8,7 @@ const Img = styled("img")(({ theme }) => ({
 }));
 const Image = forwardRef(
   // @ts-ignore
-  ({ src, className, fallback = Images.errorImg, alt, ...props }, ref) => {
+  ({ src, className, fallback = images.errorImg, alt, ...props }, ref) => {
     const [_fallback, setFallback] = useState("");
 
     const handleError = () => {

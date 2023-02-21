@@ -125,10 +125,10 @@ function ProductDetails() {
   }, []);
 
   useEffect(() => {
-    const fetchCombo = async () => {
+    const fetchBanner = async () => {
       try {
         const res = await axios.get(
-          `https://tiki.vn/api/personalish/v2/pdp?strategy=new_pdp&mpid=113864742&spid=113864746&trackity_id=4bb53046-4d5b-b591-a5ce-0092a332c47c`
+          `https://tiki.vn/api/personalish/v2/pdp?strategy=new_pdp&mpid=113864742&spid=113864746`
         );
         if (res) {
           const similarProduct = res.data.widgets.reduce((a, b) => {
@@ -138,10 +138,10 @@ function ProductDetails() {
           setBanner(similarProduct?.banner_product_info);
         }
       } catch (error) {
-        console.log("Fail to fetch combo: ", error);
+        console.log("Fail to fetch Banner: ", error);
       }
     };
-    fetchCombo();
+    fetchBanner();
   }, []);
 
   const handleShowDescription = () => {

@@ -1,24 +1,23 @@
 // @ts-nocheck
 import axios from "axios";
-const token = "FEMbbLndRm9siXiCyQIBXMP1";
 
-const axiosTiki = axios.create({
-  baseURL: process.env.REACT_APP_LOCATION_API_URL,
+const appTiki = axios.create({
+  baseURL: process.env.REACT_APP_TIKI_BASE_API,
   headers: {
     "Content-Type": "application/json",
   },
 });
 // Add a request interceptor
-axiosTiki.interceptors.request.use(async (config) => {
+appTiki.interceptors.request.use(async (config) => {
   // const currentUser = firebase.auth().currentUser;
   // if (currentUser) {
   //   const token = await currentUser.getIdToken();
   //   config.headers.Authorization = `Bearer ${token}`;
   // }
-  config.headers.Authorization = `Bearer ${token}`;
+
   return config;
 });
-axiosTiki.interceptors.response.use(
+appTiki.interceptors.response.use(
   (response) => {
     if (response && response.data) {
       return response.data;
@@ -30,4 +29,4 @@ axiosTiki.interceptors.response.use(
     throw error;
   }
 );
-export default axiosTiki;
+export default appTiki;

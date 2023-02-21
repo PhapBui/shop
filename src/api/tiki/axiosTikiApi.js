@@ -1,22 +1,23 @@
 // @ts-nocheck
 import axios from "axios";
 
-const axiosTikiHomeDeal = axios.create({
-  baseURL: "https://api.tiki.vn/v2/widget/deals/collection?per_page=12",
+const appTikiApi = axios.create({
+  baseURL: process.env.REACT_APP_API_TIKI,
   headers: {
     "Content-Type": "application/json",
   },
 });
 // Add a request interceptor
-axiosTikiHomeDeal.interceptors.request.use(async (config) => {
+appTikiApi.interceptors.request.use(async (config) => {
   // const currentUser = firebase.auth().currentUser;
   // if (currentUser) {
   //   const token = await currentUser.getIdToken();
   //   config.headers.Authorization = `Bearer ${token}`;
   // }
+
   return config;
 });
-axiosTikiHomeDeal.interceptors.response.use(
+appTikiApi.interceptors.response.use(
   (response) => {
     if (response && response.data) {
       return response.data;
@@ -28,4 +29,4 @@ axiosTikiHomeDeal.interceptors.response.use(
     throw error;
   }
 );
-export default axiosTikiHomeDeal;
+export default appTikiApi;

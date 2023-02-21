@@ -1,7 +1,12 @@
 // @ts-nocheck
 import { Box, Card, CardMedia, Stack, styled } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "app/hooks.js";
 import SlickCarousel from "components/Custom/Carousel/SlickCarousel.jsx";
-import { useCallback } from "react";
+import {
+  productActions,
+  selectHomeBrands,
+} from "features/products/productsSlice.js";
+import { memo, useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const HomeBrandWrapper = styled(Box)(({ theme }) => ({
@@ -29,7 +34,24 @@ const BrandTitleIcon = styled("img")(({ theme }) => ({
   width: 70,
 }));
 
-function HomeBrand({ brands, title }) {
+function HomeBrand() {
+  const [title, setTitle] = useState([]);
+  const [brands, setBrands] = useState([]);
+
+  const dispatch = useAppDispatch();
+  const brandsData = useAppSelector(selectHomeBrands);
+
+  useEffect(() => {
+    dispatch(productActions.fetchProductsList);
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (brandsData.length > 0) {
+      setTitle(brandsData[0].data[0].title);
+      setBrands(brandsData[0].data[0].banners);
+    }
+  }, [brandsData]);
+
   const renderCarousel = useCallback(() => {
     return (
       brands &&
@@ -54,15 +76,14 @@ function HomeBrand({ brands, title }) {
     );
   }, [brands]);
   const _settings = {
-    infinite: true,
     speed: 500,
     slidesToScroll: 1,
-    slidesToShow: brands.length < 6 ? brands.length : 6,
+    slidesToShow: 6,
     // slidesToShow: 3,
   };
   return (
     <HomeBrandWrapper>
-      {title && (
+      {title && title.length > 0 && (
         <Stack
           style={{
             flexDirection: "row",
@@ -72,19 +93,21 @@ function HomeBrand({ brands, title }) {
             columnGap: "12px",
           }}
         >
-          <BrandTitle>{title.text}</BrandTitle>
+          <BrandTitle>{title?.text}</BrandTitle>
           <BrandTitleIcon
-            src={title.icon.url}
-            srcSet={title.icon.url}
-            title={title.text}
-            alt={title.text}
+            src={title?.icon?.url}
+            srcSet={title?.icon?.url}
+            title={title?.text}
+            alt={title?.text}
           />
         </Stack>
       )}
 
-      <SlickCarousel settings={_settings}>{renderCarousel()}</SlickCarousel>
+      <SlickCarousel settings={{ ..._settings, infinite: brands.length > 6 }}>
+        {renderCarousel()}
+      </SlickCarousel>
     </HomeBrandWrapper>
   );
 }
 
-export default HomeBrand;
+export default memo(HomeBrand);
