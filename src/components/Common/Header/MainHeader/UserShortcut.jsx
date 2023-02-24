@@ -7,6 +7,7 @@ import { styled } from "@mui/material/styles";
 import TippyHeadless from "@tippyjs/react/headless";
 import { useAppSelector } from "app/hooks.js";
 import { selectCartItems } from "features/cart/cartSlice.js";
+import { useMemo } from "react";
 import { NavLink } from "react-router-dom";
 import Cart from "../../../../features/cart/cart.jsx";
 
@@ -60,7 +61,12 @@ const MenuNavLink = styled(NavLink)(({ theme }) => ({
 
 function UserShortcut() {
   const CartList = useAppSelector(selectCartItems);
-  const productsQty = CartList.reduce((a, b) => a + b.quantily, 0);
+  const productsQty = useMemo(() => {
+    if (CartList && CartList.length > 0)
+      return CartList?.reduce((a, b) => a + b.quantily, 0);
+    return "";
+  }, [CartList]);
+
   return (
     <UserShortcutContainer>
       <MenuNavLink to="/">
