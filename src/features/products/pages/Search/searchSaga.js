@@ -26,7 +26,6 @@ function* fetchQuickSearch(action) {
   try {
     const res = yield call(productTikiApi.getSearchResultList, action.payload);
     yield put(searchActions.fetchSearchResultSuccess(res.data));
-    console.log(res);
   } catch (error) {
     console.log("Failed to fetchQuickSearch: ", error);
     yield put(searchActions.fetchSearchFailed());

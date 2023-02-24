@@ -169,7 +169,6 @@ function* fetchProductDiscoverList(action) {
   }
 }
 function* fetchProductRecentlyViewedList(action) {
-  console.log(action);
   const params = {
     product_id: action.payload.productId,
     ids: "145974294,190194378",

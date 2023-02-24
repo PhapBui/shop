@@ -1,29 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-const cartItem = [
-  {
-    id: 0,
-    qty: 1,
-    name: "product1",
-    price: 600,
-    image: "https://nutthat.com/wp-content/uploads/2022/09/Duong-Don-Diep1.jpg",
-  },
-  {
-    id: 1,
-    qty: 1,
-    name: "product2",
-    price: 600,
-    image: "https://nutthat.com/wp-content/uploads/2022/09/Duong-Don-Diep1.jpg",
-  },
-  {
-    id: 2,
-    qty: 2,
-    name: "product3",
-    price: 600,
-    image: "https://nutthat.com/wp-content/uploads/2022/09/Duong-Don-Diep1.jpg",
-  },
-];
+
+const recentlyCart = JSON.parse(localStorage.getItem("cart"));
+
 const initialState = {
-  cartArr: cartItem,
+  cartArr: recentlyCart,
   loading: false,
 };
 
@@ -52,11 +32,13 @@ export const cartSlice = createSlice({
         const objIndex = indexProduct(state.cartArr, action);
 
         if (objIndex === undefined) {
-          state.cartArr[objIndex].qty = +action.payload.qty;
+          state.cartArr[objIndex].quantily = +action.payload.quantily;
         } else {
-          state.cartArr[objIndex].qty += +action.payload.qty;
+          state.cartArr[objIndex].quantily += +action.payload.quantily;
         }
       }
+
+      localStorage.setItem("cart", JSON.stringify(state.cartArr));
       state.loading = false;
     },
     addToCartListFailed(state, action) {
@@ -64,7 +46,7 @@ export const cartSlice = createSlice({
     },
     removeProductInCart(state, action) {
       state.cartArr.splice(action.payload, 1);
-      console.log(action);
+      localStorage.setItem("cart", JSON.stringify(state.cartArr));
     },
     emptyCart: (state) => {
       state.cartArr = [];
@@ -76,7 +58,7 @@ export const cartSlice = createSlice({
 export const cartActions = cartSlice.actions;
 
 // Selectors
-export const addToCart = (state) => state.rootReducer.cart.cartArr;
+export const selectCartItems = (state) => state.rootReducer.cart.cartArr;
 
 const cartReducer = cartSlice.reducer;
 export default cartReducer;

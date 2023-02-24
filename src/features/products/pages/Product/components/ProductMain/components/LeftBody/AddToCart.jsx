@@ -3,9 +3,9 @@ import { useAppDispatch, useAppSelector } from "app/hooks.js";
 import {
   cartActions,
   // addToCart,
-} from "components/Common/Header/cart/cartSlice.js";
+} from "features/cart/cartSlice.js";
 import { selectProductById } from "features/products/productsSlice.js";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const Wrapper = styled("div")({
   "display": "flex",
@@ -114,23 +114,31 @@ const Wrapper = styled("div")({
 
 const AddToCart = () => {
   const [quantily, setQuantily] = useState(1);
+  const [data, setData] = useState({});
   // const count = useAppSelector(addToCart);
   const dispatch = useAppDispatch();
-
+  const productData = useAppSelector(selectProductById);
   const handleProductQuantily = (e) => {
     setQuantily(e.target.value);
   };
-  const data = {
-    quantily,
-    price: 200,
-    name: "ga",
-    id: 1,
-  };
+
+  useEffect(() => {
+    const data = {
+      quantily,
+      price: productData.price,
+      name: productData.name,
+      id: productData.id,
+      image: productData.thumbnail_url,
+      short_url: productData.url_path,
+    };
+    setData(data);
+  }, [productData, quantily]);
+
   const handleAddToCart = () => {
     dispatch(cartActions.addToCart(data));
     setQuantily(1);
   };
-  const productData = useAppSelector(selectProductById);
+
   return (
     <Wrapper>
       <p className="label">Số lượng</p>

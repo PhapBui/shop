@@ -2,7 +2,7 @@ import { useAppDispatch } from "app/hooks.js";
 import { productActions } from "features/products/productsSlice.js";
 import { memo, useEffect } from "react";
 import BuyXGetY from "./components/BuyXGetY/BuyXGetY.jsx";
-import DiscountMatch from "./components/DiscountMatch/DiscountMatch.jsx";
+// import DiscountMatch from "./components/DiscountMatch/DiscountMatch.jsx";
 import Discover from "./components/Discover/Discover.jsx";
 import ProductInfos from "./components/ProductDetails/ProductDetails.jsx";
 import ProductMain from "./components/ProductMain/ProductMain.jsx";
@@ -67,7 +67,7 @@ function Product({ sellerId, productId, spid }) {
     <>
       <ProductMain />
       <BuyXGetY />
-      <DiscountMatch />
+      {/* <DiscountMatch /> */}
       <SimilarProducts />
       <ProductInfos />
       <Review />

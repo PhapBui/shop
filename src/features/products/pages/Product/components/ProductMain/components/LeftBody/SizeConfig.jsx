@@ -67,13 +67,14 @@ const Wrapper = styled("div")({
 const SizeConfig = () => {
   const [productOpt, setProductOpt] = useState({});
   // const [products, setProducts] = useState([]);
+  // setProducts(productData?.configurable_products);
+
   const [size, setSize] = useState([]);
   const productData = useAppSelector(selectProductById);
 
   useEffect(() => {
     if (productData) {
       setSize(productData.configurable_options);
-      // setProducts(productData?.configurable_products);
     }
   }, [productData]);
 
@@ -108,7 +109,7 @@ const SizeConfig = () => {
           >
             <div className="title">
               {`${item.name}: `}
-              <span>{productOpt[item.code] || item.values[idx].label}</span>
+              <span>{productOpt[item.code] || item.values[0]?.label}</span>
             </div>
             <div className="option">{renderLabel(item.values, item.code)}</div>
           </div>

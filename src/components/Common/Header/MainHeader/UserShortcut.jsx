@@ -1,12 +1,14 @@
-import { Stack } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import { NavLink } from "react-router-dom";
-import HomeIcon from "@mui/icons-material/Home";
 import DiamondIcon from "@mui/icons-material/Diamond";
 import FaceRetouchingNaturalIcon from "@mui/icons-material/FaceRetouchingNatural";
+import HomeIcon from "@mui/icons-material/Home";
 import LocalGroceryStoreOutlinedIcon from "@mui/icons-material/LocalGroceryStoreOutlined";
+import { Stack } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import TippyHeadless from "@tippyjs/react/headless";
-import Cart from "../cart/cart.jsx";
+import { useAppSelector } from "app/hooks.js";
+import { selectCartItems } from "features/cart/cartSlice.js";
+import { NavLink } from "react-router-dom";
+import Cart from "../../../../features/cart/cart.jsx";
 
 const UserShortcutContainer = styled(Stack)(({ theme }) => ({
   flexDirection: "row",
@@ -57,6 +59,8 @@ const MenuNavLink = styled(NavLink)(({ theme }) => ({
 }));
 
 function UserShortcut() {
+  const CartList = useAppSelector(selectCartItems);
+  const productsQty = CartList.reduce((a, b) => a + b.quantily, 0);
   return (
     <UserShortcutContainer>
       <MenuNavLink to="/">
@@ -79,7 +83,7 @@ function UserShortcut() {
       >
         <MenuNavLink to="/gio-hang">
           <LocalGroceryStoreOutlinedIcon className="store" />
-          <span className="item-qty">0</span>
+          <span className="item-qty">{productsQty}</span>
         </MenuNavLink>
       </TippyHeadless>
     </UserShortcutContainer>

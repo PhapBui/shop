@@ -300,7 +300,7 @@ const Overview = ({ dataOverview, dataImages }) => {
                         <div
                           className="thumbnail"
                           style={{
-                            backgroundImage: `url(${item.images[0].full_path}) `,
+                            backgroundImage: `url(${item.images[0]?.full_path}) `,
                           }}
                         ></div>
                       </div>
@@ -313,7 +313,7 @@ const Overview = ({ dataOverview, dataImages }) => {
                   <div
                     className="thumbnail "
                     style={{
-                      backgroundImage: `url(${dataImages[4].images[0].full_path}) `,
+                      backgroundImage: `url(${dataImages[4]?.images[0]?.full_path}) `,
                     }}
                   ></div>
                   <div className="img-total">+{dataImages?.length - 3}</div>
