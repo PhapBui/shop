@@ -5,11 +5,13 @@ import cartReducer from "components/Common/Header/cart/cartSlice.js";
 import productReducer from "../features/products/productsSlice.js";
 import { history } from "../utils";
 import rootSaga from "./rootSaga.js";
+import searchReducer from "features/products/pages/Search/searchSlice.js";
 
 const rootReducer = combineReducers({
   router: connectRouter(history),
   products: productReducer,
   cart: cartReducer,
+  search: searchReducer,
 });
 const sagaMiddleware = createSagaMiddleware();
 export const store = configureStore({

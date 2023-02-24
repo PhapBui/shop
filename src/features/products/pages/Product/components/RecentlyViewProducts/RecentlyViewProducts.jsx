@@ -1,7 +1,8 @@
 import { styled } from "@mui/material";
-import axios from "axios";
+import { useAppSelector } from "app/hooks.js";
 import SlickCarousel from "components/Custom/Carousel/SlickCarousel.jsx";
-import { useEffect, useState } from "react";
+import { selectRecentlyList } from "features/products/productsSlice.js";
+import { memo } from "react";
 import ProductItem from "../Common/ProductItem.jsx";
 
 const Wrapper = styled("div")({
@@ -34,32 +35,19 @@ const settings = {
 };
 
 function RecentlyViewProducts() {
-  const [Product, setProduct] = useState([]);
-  const [numbers, setNumbers] = useState([]);
-  const url = `https://tiki.vn/api/v2/me/recently_viewed?product_id=145974294&ids=145974294,190194378&platform=desktop`;
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const res = await axios.get(url);
-        if (res) {
-          setProduct(res.data.data);
-        }
-      } catch (error) {
-        console.log("Failed to Fetch Products: ", error);
-      }
-    };
-    fetchProduct();
-  }, [url]);
+  const RecentlyViewed = useAppSelector(selectRecentlyList);
 
   return (
     <Wrapper>
       <Header>
         <Title>Sản phẩm đã xem</Title>
       </Header>
-      <SlickCarousel settings={{ ...settings, infinite: Product?.length > 6 }}>
-        {Product &&
-          Product.length > 0 &&
-          Product.map((product, i) => (
+      <SlickCarousel
+        settings={{ ...settings, infinite: RecentlyViewed?.length > 6 }}
+      >
+        {RecentlyViewed &&
+          RecentlyViewed.length > 0 &&
+          RecentlyViewed.map((product, i) => (
             <ProductItem
               key={product.id}
               data={product}
@@ -70,4 +58,4 @@ function RecentlyViewProducts() {
   );
 }
 
-export default RecentlyViewProducts;
+export default memo(RecentlyViewProducts);

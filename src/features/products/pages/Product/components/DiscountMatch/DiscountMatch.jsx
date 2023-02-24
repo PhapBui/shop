@@ -2,10 +2,10 @@
 import { styled } from "@mui/material";
 import { useAppSelector } from "app/hooks.js";
 import SlickCarousel from "components/Custom/Carousel/SlickCarousel.jsx";
-import { selectComboList } from "features/products/productsSlice.js";
+import { selectComboDiscount } from "features/products/productsSlice.js";
 import { memo } from "react";
 import { Link } from "react-router-dom";
-import ProductItem from "../Common/ProductItem.jsx";
+import ProductItem from "./Item.jsx";
 
 const Wrapper = styled("div")({
   "margin": "16px 0px",
@@ -38,25 +38,26 @@ const settings = {
   slidesToShow: 6,
   slidesToScroll: 6,
 };
-function BuyXGetY() {
-  const comboData = useAppSelector(selectComboList);
+function DiscountMatch() {
+  const comboDiscount = useAppSelector(selectComboDiscount);
+
   return (
-    comboData?.items &&
-    comboData?.items?.length > 0 && (
+    comboDiscount?.data &&
+    comboDiscount?.data?.length > 0 && (
       <Wrapper>
         <Header>
-          <Title>{comboData?.title}</Title>
-          <Readmore to={comboData?.view_more_url}>
-            {comboData?.view_more_text}
+          <Title>{comboDiscount?.title}</Title>
+          <Readmore to={comboDiscount?.view_more_url}>
+            {comboDiscount?.view_more_text}
           </Readmore>
         </Header>
         <SlickCarousel settings={settings}>
-          {comboData?.items &&
-            comboData?.items?.length > 0 &&
-            comboData?.items?.map((product, i) => (
+          {comboDiscount?.data &&
+            comboDiscount?.data?.length > 0 &&
+            comboDiscount?.data?.map((product, i) => (
               <ProductItem
                 key={product.id}
-                comboData={product}
+                data={product}
               />
             ))}
         </SlickCarousel>
@@ -65,4 +66,4 @@ function BuyXGetY() {
   );
 }
 
-export default memo(BuyXGetY);
+export default memo(DiscountMatch);

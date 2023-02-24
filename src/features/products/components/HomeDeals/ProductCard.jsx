@@ -1,6 +1,6 @@
 import { Card, CardMedia, Stack, styled } from "@mui/material";
 import FireIcon from "assets/images/fire_icon.js";
-import React from "react";
+import React, { memo } from "react";
 
 const ProductWrapper = styled(Card)(({ theme }) => ({
   position: "relative",
@@ -117,4 +117,4 @@ function ProductCard({ data, progress }) {
   );
 }
 
-export default ProductCard;
+export default memo(ProductCard);

@@ -1,5 +1,5 @@
 import { styled } from "@mui/material";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, memo } from "react";
 import { useCallback } from "react";
 
 const Wrapper = styled("div")(({ theme }) => ({
@@ -88,4 +88,4 @@ const Timer = ({ timelife }) => {
   );
 };
 
-export default Timer;
+export default memo(Timer);

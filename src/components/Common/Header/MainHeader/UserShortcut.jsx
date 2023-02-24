@@ -74,7 +74,6 @@ function UserShortcut() {
       <TippyHeadless
         placement="bottom-end"
         interactive
-        visible
         maxWidth={821}
         render={(attrs) => <Cart />}
       >

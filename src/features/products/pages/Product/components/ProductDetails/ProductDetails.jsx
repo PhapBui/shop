@@ -1,7 +1,11 @@
 // @ts-nocheck
 import { styled, Table, TableBody, TableCell, TableRow } from "@mui/material";
-import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useAppSelector } from "app/hooks.js";
+import {
+  selectBannerEvent,
+  selectProductById,
+} from "features/products/productsSlice.js";
+import { memo, useEffect, useRef, useState } from "react";
 
 const Wrapper = styled("div")({
   display: "flex",
@@ -10,6 +14,7 @@ const Main = styled("div")({
   flex: "1 0 0",
 });
 const Sidebar = styled("div")({
+  width: 300,
   marginLeft: "20px",
   paddingTop: "30px",
 });
@@ -39,6 +44,7 @@ const Content = styled("div")({
   "color": "rgb(36, 36, 36)",
   "textAlign": "justify",
   "borderRadius": "4px",
+  "width": "100%",
   "&>.toggle-content": {
     "position": "relative",
 
@@ -101,49 +107,19 @@ function ProductDetails() {
   const desRef = useRef();
   const [detail, setDetail] = useState([]);
   const [description, setDescription] = useState("");
-  const [banner, setBanner] = useState([]);
   const [desHeight, setDesHeight] = useState(
     () => desRef?.current?.clientHeight
   );
   const [isShow, setIsShow] = useState(true);
+  const bannerEvent = useAppSelector(selectBannerEvent);
+  const ProductData = useAppSelector(selectProductById);
 
   useEffect(() => {
-    const fetchDetail = async () => {
-      try {
-        const res = await axios.get(
-          `https://tiki.vn/api/v2/products/207779223`
-        );
-        if (res) {
-          setDetail(res.data?.specifications[0]?.attributes);
-          setDescription(res.data?.description);
-        }
-      } catch (error) {
-        console.log("Failed to fetch Detail: ", error);
-      }
-    };
-    fetchDetail();
-  }, []);
-
-  useEffect(() => {
-    const fetchBanner = async () => {
-      try {
-        const res = await axios.get(
-          `https://tiki.vn/api/personalish/v2/pdp?strategy=new_pdp&mpid=113864742&spid=113864746`
-        );
-        if (res) {
-          const similarProduct = res.data.widgets.reduce((a, b) => {
-            a[b.code] = b;
-            return a;
-          }, {});
-          setBanner(similarProduct?.banner_product_info);
-        }
-      } catch (error) {
-        console.log("Fail to fetch Banner: ", error);
-      }
-    };
-    fetchBanner();
-  }, []);
-
+    if (ProductData?.specifications?.length > 0) {
+      setDetail(ProductData?.specifications[0]?.attributes);
+      setDescription(ProductData?.description);
+    }
+  }, [ProductData]);
   const handleShowDescription = () => {
     if (desRef.current?.clientHeight !== desHeight) {
       setDesHeight(desRef.current?.clientHeight);
@@ -204,7 +180,7 @@ function ProductDetails() {
                 data-view-id="pdp_view_description_button"
                 onClick={handleShowDescription}
               >
-                Xem Thêm Nội Dung
+                {isShow ? "Xem Thêm Nội Dung" : "Ẩn bớt nội dung"}
               </button>
             )}
           </Content>
@@ -212,11 +188,11 @@ function ProductDetails() {
       </Main>
       <Sidebar>
         <div className="camp-banner">
-          <a href={banner?.url}>
+          <a href={bannerEvent?.url}>
             <img
-              src={banner?.image}
-              alt={banner?.title}
-              ratio={banner?.image_ratio}
+              src={bannerEvent?.image}
+              alt={bannerEvent?.title}
+              ratio={bannerEvent?.image_ratio}
             />
           </a>
         </div>
@@ -225,4 +201,4 @@ function ProductDetails() {
   );
 }
 
-export default ProductDetails;
+export default memo(ProductDetails);

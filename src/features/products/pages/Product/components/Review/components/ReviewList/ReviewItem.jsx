@@ -385,11 +385,11 @@ const ReviewItem = ({ data }) => {
           <div className="created-at">
             <div className="created-time">
               {RenderDateCreated(
-                data.timeline.current_date,
-                data.timeline.delivery_date
+                data.timeline?.current_date,
+                data.timeline?.delivery_date
               )}
             </div>
-            <div className="explain">{data.timeline.content}</div>
+            <div className="explain">{data.timeline?.content}</div>
           </div>
           <div className="user-actions">
             <button className="action-btn like">
@@ -428,7 +428,7 @@ const ReviewItem = ({ data }) => {
                       <div className="name">{item.fullname}</div>
                       <div className="date">
                         {RenderDateCreated(
-                          data.timeline.current_date,
+                          data.timeline?.current_date,
                           item.create_at * 1000
                         )}
                       </div>

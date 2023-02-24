@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { Box, Stack, styled } from "@mui/material";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 
 import SlickCarousel from "components/Custom/Carousel/SlickCarousel.jsx";
 
@@ -123,4 +123,4 @@ function HomeDeal() {
   );
 }
 
-export default HomeDeal;
+export default memo(HomeDeal);

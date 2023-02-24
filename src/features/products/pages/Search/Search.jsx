@@ -1,7 +1,9 @@
 import { Box, Pagination, styled } from "@mui/material";
-import React from "react";
+import { useAppSelector } from "app/hooks.js";
+import React, { memo } from "react";
 import SearchHeader from "./components/SearchHeader.jsx";
 import SearchProduct from "./components/SearchProduct.jsx";
+import { selectPaging } from "./searchSlice.js";
 
 const Wrapper = styled(Box)({
   "& 	.MuiPagination-ul": {
@@ -17,12 +19,14 @@ const Wrapper = styled(Box)({
 });
 
 function Search() {
+  const paginationData = useAppSelector(selectPaging);
   return (
     <Wrapper>
       <SearchHeader />
       <SearchProduct />
       <Pagination
-        count={46}
+        count={paginationData?.last_page}
+        defaultPage={paginationData?.current_page}
         color="primary"
         size="large"
         shape="rounded"
@@ -34,4 +38,4 @@ function Search() {
   );
 }
 
-export default Search;
+export default memo(Search);

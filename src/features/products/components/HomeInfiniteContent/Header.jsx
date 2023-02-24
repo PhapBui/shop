@@ -1,4 +1,5 @@
 import { styled } from "@mui/material";
+import { memo } from "react";
 
 const Header = styled("header")(({ theme }) => ({
   display: "flex",
@@ -109,4 +110,4 @@ function ProductHeader({ title, tabs, handleNavigate, style, tabActive }) {
   );
 }
 
-export default ProductHeader;
+export default memo(ProductHeader);

@@ -1,6 +1,8 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useAppDispatch } from "app/hooks.js";
+import { productActions } from "features/products/productsSlice.js";
+import { memo, useEffect } from "react";
 import BuyXGetY from "./components/BuyXGetY/BuyXGetY.jsx";
+import DiscountMatch from "./components/DiscountMatch/DiscountMatch.jsx";
 import Discover from "./components/Discover/Discover.jsx";
 import ProductInfos from "./components/ProductDetails/ProductDetails.jsx";
 import ProductMain from "./components/ProductMain/ProductMain.jsx";
@@ -8,99 +10,64 @@ import RecentlyViewProducts from "./components/RecentlyViewProducts/RecentlyView
 import Review from "./components/Review/Review.jsx";
 import SimilarProducts from "./components/SimilarProducts/SimilarProducts.jsx";
 
-function Product() {
-  const [dataRight, setDataRight] = useState([]);
-  const [dataLeft, setDataLeft] = useState([]);
+function Product({ sellerId, productId, spid }) {
+  const dispatch = useAppDispatch();
 
+  //Dispatch getProductCombo
+  //Dispatch discount match
+  //discoverData
   useEffect(() => {
-    const queryData = {
-      proId: 169375199,
-      spId: 169375205,
-      seller_id: 196090,
-    };
-    const fetchDataProduct = async () => {
-      try {
-        const res = await axios.get(
-          `https://tiki.vn/api/v2/products/${queryData.proId}?platform=web&spid=${queryData.spId}`
-        );
+    if (sellerId && productId) {
+      dispatch(
+        productActions.fetchProductCombo({
+          product_id: productId,
+          seller_id: sellerId,
+        })
+      );
+      dispatch(
+        productActions.fetchProductComboDiscount({
+          product_id: productId,
+          seller_id: sellerId,
+        })
+      );
+      dispatch(
+        productActions.fetchProductDiscover({
+          product_id: productId,
+          seller_id: sellerId,
+        })
+      );
+    }
+  }, [dispatch, sellerId, productId]);
 
-        const clientImgs = await axios.get(
-          `https://tiki.vn/api/v2/reviews?product_id=${queryData.proId}&include=comments&page=1&limit=-1&top=true&spid=${queryData.spId}&seller_id=${queryData.seller_id}`
-        );
-        // https://tiki.vn/api/v2/products/198641664?platform=web&spid=198641666
-        const coupon = await axios.get(
-          `https://api.tiki.vn/raiden/v2/asa/seller/coupon?platform=desktop&pid=${queryData.spId}&seller_id=${queryData.seller_id}`
-        );
-
-        const shipping = await axios.get(
-          `https://tiki.vn/api/v2/products/widget/delivery_info/${queryData.spId}?platform=web&pdp=v2`
-        );
-        const seller = await axios.get(
-          `https://tiki.vn/api/shopping/v2/widgets/seller?seller_id=${queryData.seller_id}`
-        );
-        const client = [];
-        clientImgs.data.reduce((a, b) => {
-          client.push(b.images);
-          return client;
-        });
-        if (res) {
-          document.title = res.data?.name;
-          setDataLeft((prev) => ({
-            ...prev,
-            thumbnail: res.data?.thumbnail_url,
-            images: res.data?.images,
-            clientImages: [...client],
-          }));
-          setDataRight((prev) => ({
-            ...prev,
-            header: {
-              brand: res.data?.brand,
-              name: res.data?.name,
-              quantity_sold: res.data?.quantity_sold,
-              review_count: res.data?.review_count,
-              rating_average: res.data?.rating_average,
-            },
-            price: {
-              price: res.data?.price,
-              originalPrice: res.data?.original_price,
-              discount_rate: res.data?.discount_rate,
-              astra: res.data?.asa_cashback_widget,
-            },
-            coupon: {
-              text: coupon.data.coupon_qty,
-              labels: coupon.data.coupon_label,
-            },
-            ship: shipping.data,
-            configOpt: {
-              size: res.data?.configurable_options,
-              product: res.data?.configurable_products,
-            },
-            addon: {
-              title: res.data?.add_on_title,
-              data: res.data?.add_on,
-            },
-            seller: {
-              current: seller?.data?.data?.seller,
-              other: res.data?.other_sellers,
-            },
-            warranty_info: res.data?.warranty_info,
-            benefits: res.data?.benefits,
-          }));
-        }
-      } catch (error) {
-        console.log("Failed to fetch DataProduct: ", error);
-      }
+  //Dispatch get review list
+  useEffect(() => {
+    const params = {
+      limit: 5,
+      include: "comments,contribute_info,attribute_vote_summary",
+      sort: "score|desc,id|desc,stars|all",
+      page: 1,
+      spid: spid,
+      product_id: productId,
+      seller_id: sellerId,
     };
-    fetchDataProduct();
-  }, []);
+    if (sellerId && productId)
+      dispatch(productActions.fetchProducReviewList(params));
+  }, [dispatch, sellerId, productId, spid]);
+
+  //Similar Product
+  //Recently
+  useEffect(() => {
+    if (productId) {
+      dispatch(productActions.fetchProductSimilar(productId));
+      dispatch(productActions.fetchProductRecentlyViewed(productId));
+    }
+  }, [dispatch, productId]);
 
   return (
     <>
-      <ProductMain
-        dataRight={dataRight}
-        dataLeft={dataLeft}
-      />
+      <ProductMain />
       <BuyXGetY />
+      <DiscountMatch />
       <SimilarProducts />
       <ProductInfos />
       <Review />
@@ -110,4 +77,4 @@ function Product() {
   );
 }
 
-export default Product;
+export default memo(Product);

@@ -1,5 +1,10 @@
 import { Stack, styled } from "@mui/material";
-import { useState } from "react";
+import { useAppSelector } from "app/hooks.js";
+import {
+  selectClientImage,
+  selectProductById,
+} from "features/products/productsSlice.js";
+import { memo, useState } from "react";
 import AddOn from "./components/LeftBody/AddOn.jsx";
 import AddToCart from "./components/LeftBody/AddToCart.jsx";
 import Coupon from "./components/LeftBody/Coupon.jsx";
@@ -86,9 +91,12 @@ const ProductMainBodyMainRight = styled("div")({
   },
 });
 
-function ProductMain({ dataRight, dataLeft }) {
+function ProductMain() {
   const [thumnailUrl, setThumnailUrl] = useState("");
   const [active, setActive] = useState(0);
+
+  const clientImages = useAppSelector(selectClientImage);
+  const productData = useAppSelector(selectProductById);
 
   const handleThumbmailProduct = (image, idx) => {
     setActive(idx);
@@ -96,117 +104,113 @@ function ProductMain({ dataRight, dataLeft }) {
   };
   return (
     <ProductMainWrapper>
-      {dataLeft && (
-        <ProductMainImage>
-          <div className="group-images">
-            <div className="thumbnail">
-              <div className="container">
+      <ProductMainImage>
+        <div className="group-images">
+          <div className="thumbnail">
+            <div className="container">
+              <picture>
+                <source
+                  type="image/webp"
+                  srcSet={thumnailUrl || productData?.thumbnail_url}
+                />
+                {(thumnailUrl || productData?.thumbnail_url) && (
+                  <img
+                    src={thumnailUrl || productData?.thumbnail_url}
+                    alt="product"
+                  />
+                )}
+              </picture>
+            </div>
+          </div>
+        </div>
+        <div className="review-images">
+          <div className="image-list">
+            {productData?.images &&
+              // eslint-disable-next-line array-callback-return
+              productData?.images?.map((image, idx) => {
+                if (idx < 5)
+                  return (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => handleThumbmailProduct(image, idx)}
+                      className={active === idx ? "active" : ""}
+                    >
+                      <picture>
+                        <source
+                          type="image/webp"
+                          srcSet={image.thumbnail_url}
+                        />
+                        <img
+                          key={idx}
+                          src={image.thumbnail_url}
+                          alt={image.thumbnail_url}
+                        />
+                      </picture>
+                    </button>
+                  );
+              })}
+            {clientImages && productData?.images && (
+              <button
+                type="button"
+                onClick={() => handleThumbmailProduct(clientImages[5], 5)}
+                className={active === 5 ? "active" : ""}
+              >
                 <picture>
                   <source
                     type="image/webp"
-                    srcSet={thumnailUrl || dataLeft.thumbnail}
+                    srcSet={productData?.images[5]?.thumbnail_url}
                   />
-                  {(thumnailUrl || dataLeft.thumbnail) && (
-                    <img
-                      src={thumnailUrl || dataLeft.thumbnail}
-                      alt="product"
-                    />
-                  )}
+                  <img
+                    src={clientImages[5]?.thumbnail_url}
+                    alt={clientImages[5]?.thumbnail_url}
+                  />
                 </picture>
-              </div>
-            </div>
-          </div>
-          <div className="review-images">
-            <div className="image-list">
-              {dataLeft &&
-                // eslint-disable-next-line array-callback-return
-                dataLeft.images?.map((image, idx) => {
-                  if (idx < 5)
-                    return (
-                      <button
-                        key={idx}
-                        type="button"
-                        onClick={() => handleThumbmailProduct(image, idx)}
-                        className={active === idx ? "active" : ""}
-                      >
-                        <picture>
-                          <source
-                            type="image/webp"
-                            srcSet={image.thumbnail_url}
-                          />
-                          <img
-                            key={idx}
-                            src={image.thumbnail_url}
-                            alt={image.thumbnail_url}
-                          />
-                        </picture>
-                      </button>
-                    );
-                })}
-              {dataLeft?.images && (
-                <button
-                  type="button"
-                  onClick={() => handleThumbmailProduct(dataLeft?.images[5], 5)}
-                  className={active === 5 ? "active" : ""}
+                <span
+                  style={{
+                    display: "block",
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%,-50%)",
+                    zIndex: 9,
+                  }}
                 >
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcSet={dataLeft.images[5]?.thumbnail_url}
-                    />
-                    <img
-                      src={dataLeft?.images[5]?.thumbnail_url}
-                      alt={dataLeft?.images[5]?.thumbnail_url}
-                    />
-                  </picture>
-                  <span
-                    style={{
-                      display: "block",
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      transform: "translate(-50%,-50%)",
-                      zIndex: 9,
-                    }}
-                  >
-                    Xem them
-                  </span>
-                </button>
-              )}
-            </div>
+                  Xem them
+                </span>
+              </button>
+            )}
           </div>
-          <div className="social-share"></div>
-          <div className="track-banner"></div>
-        </ProductMainImage>
-      )}
+        </div>
+        <div className="social-share"></div>
+        <div className="track-banner"></div>
+      </ProductMainImage>
 
-      {dataRight && (
-        <ProductMainBody>
-          <ProductMainBodyHeader>
-            <ProductHeader data={dataRight.header} />
-          </ProductMainBodyHeader>
+      <ProductMainBody>
+        <ProductMainBodyHeader>
+          <ProductHeader />
+        </ProductMainBodyHeader>
 
-          <ProductMainBodyMain className="body">
-            <ProductMainBodyMainLeft className="product">
-              <Price data={dataRight?.price} />
-              <SizeConfig data={dataRight?.configOpt} />
-              <Coupon data={dataRight?.coupon} />
-              <Shipping />
-              <AddOn />
-              <AddToCart />
-            </ProductMainBodyMainLeft>
-            <ProductMainBodyMainRight className="provider">
-              <div className="current-seller">
-                <SellerOverView data={dataRight?.seller} />
-                <Policy data={dataRight?.warranty_info} />
-                <Benefit data={dataRight?.benefits} />
-              </div>
-            </ProductMainBodyMainRight>
-          </ProductMainBodyMain>
-        </ProductMainBody>
-      )}
+        <ProductMainBodyMain className="body">
+          <ProductMainBodyMainLeft className="product">
+            <Price />
+            <SizeConfig />
+            <Coupon />
+            <Shipping />
+            <AddOn />
+            <AddToCart />
+          </ProductMainBodyMainLeft>
+          <ProductMainBodyMainRight className="provider">
+            <div className="current-seller">
+              <SellerOverView />
+              <Policy />
+              <Benefit />
+            </div>
+          </ProductMainBodyMainRight>
+        </ProductMainBodyMain>
+      </ProductMainBody>
     </ProductMainWrapper>
   );
 }
 
-export default ProductMain;
+export default memo(ProductMain);

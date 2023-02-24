@@ -1,5 +1,7 @@
 import { styled } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import { useAppSelector } from "app/hooks.js";
+import { selectProductById } from "features/products/productsSlice.js";
+import React, { useState, useEffect, memo } from "react";
 
 const Wrapper = styled("div")({
   "marginTop": "16px",
@@ -62,45 +64,57 @@ const Wrapper = styled("div")({
   },
 });
 
-const SizeConfig = ({ data }) => {
-  const [product, setProduct] = useState("");
+const SizeConfig = () => {
+  const [productOpt, setProductOpt] = useState({});
+  // const [products, setProducts] = useState([]);
+  const [size, setSize] = useState([]);
+  const productData = useAppSelector(selectProductById);
 
   useEffect(() => {
-    if (data) setProduct(data.size[0]?.values[0]?.label);
-  }, [data]);
+    if (productData) {
+      setSize(productData.configurable_options);
+      // setProducts(productData?.configurable_products);
+    }
+  }, [productData]);
 
-  const handleChangeProduct = (item) => {
-    setProduct(item.label);
+  const handleChangeProduct = (item, code) => {
+    setProductOpt((prev) => ({ ...prev, [code]: item.label }));
+  };
+
+  const renderLabel = (values, code) => {
+    return values.map((value, idx) => (
+      <button
+        className={`item ${value.label === productOpt[code] ? "active" : ""}`}
+        onClick={() => handleChangeProduct(value, code)}
+        key={idx}
+      >
+        {value.label}
+        <img
+          className="selected-indicator"
+          src="https://frontend.tikicdn.com/_desktop-next/static/img/pdp_revamp_v2/selected-variant-indicator.svg"
+          alt="Selected"
+        ></img>
+      </button>
+    ));
   };
   return (
     <Wrapper className="size-config">
-      {data && (
-        <div className="content">
-          <div className="title">
-            {`${data && data.size[0]?.name}: `}
-            <span>{product}</span>
+      {size &&
+        size?.length > 0 &&
+        size?.map((item, idx) => (
+          <div
+            className="content"
+            key={idx}
+          >
+            <div className="title">
+              {`${item.name}: `}
+              <span>{productOpt[item.code] || item.values[idx].label}</span>
+            </div>
+            <div className="option">{renderLabel(item.values, item.code)}</div>
           </div>
-          <div className="option">
-            {data &&
-              data.size[0]?.values.map((item, idx) => (
-                <button
-                  className={`item ${item.label === product ? "active" : ""}`}
-                  onClick={() => handleChangeProduct(item)}
-                  key={idx}
-                >
-                  {item.label}
-                  <img
-                    className="selected-indicator"
-                    src="https://frontend.tikicdn.com/_desktop-next/static/img/pdp_revamp_v2/selected-variant-indicator.svg"
-                    alt="Selected"
-                  ></img>
-                </button>
-              ))}
-          </div>
-        </div>
-      )}
+        ))}
     </Wrapper>
   );
 };
 
-export default SizeConfig;
+export default memo(SizeConfig);

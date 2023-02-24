@@ -1,4 +1,3 @@
-import Header from "components/Common/Header/Header.jsx";
 import Register from "features/auth/index.jsx";
 import CategoryPage from "Layouts/CategoryPage.js";
 import HomePage from "Layouts/HomePage.js";
@@ -12,7 +11,6 @@ function App() {
       className="App"
       // style={{ backgroundColor: "#efefef" }}
     >
-      <Header />
       <Routes>
         <Route
           path="/"

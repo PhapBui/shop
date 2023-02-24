@@ -1,5 +1,7 @@
 import { styled } from "@mui/material";
-import React from "react";
+import { useAppSelector } from "app/hooks.js";
+import { selectCoupon } from "features/products/productsSlice.js";
+import React, { memo } from "react";
 
 const Wrapper = styled("div")({
   "backgroundColor": "rgb(255, 255, 255)",
@@ -66,13 +68,14 @@ const Wrapper = styled("div")({
   },
 });
 
-const Coupon = ({ data }) => {
+const Coupon = () => {
+  const couponData = useAppSelector(selectCoupon);
   return (
     <Wrapper className="coupon">
-      <div className="title">{data && data?.text}</div>
+      <div className="title">{couponData && couponData?.coupon_qty}</div>
       <div className="options">
-        {data &&
-          data?.labels?.map((lab, idx) => (
+        {couponData &&
+          couponData?.coupon_label?.map((lab, idx) => (
             <div
               className="option"
               key={idx}
@@ -90,4 +93,4 @@ const Coupon = ({ data }) => {
   );
 };
 
-export default Coupon;
+export default memo(Coupon);

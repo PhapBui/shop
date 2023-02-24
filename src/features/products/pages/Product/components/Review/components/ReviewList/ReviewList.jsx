@@ -1,6 +1,6 @@
 import { Stack, styled } from "@mui/material";
 import PaginationCp from "components/Common/Pagination/Pagination.jsx";
-import React from "react";
+import React, { memo } from "react";
 import ReviewItem from "./ReviewItem.jsx";
 
 const Wrapper = styled("div")({
@@ -43,4 +43,4 @@ const ReviewList = ({ data, page }) => {
   );
 };
 
-export default ReviewList;
+export default memo(ReviewList);

@@ -1,4 +1,7 @@
 import { Rating, styled } from "@mui/material";
+import { useAppSelector } from "app/hooks.js";
+import { selectProductById } from "features/products/productsSlice.js";
+import { memo } from "react";
 import { Link } from "react-router-dom";
 
 const Wrapper = styled("div")({
@@ -29,33 +32,36 @@ const Wrapper = styled("div")({
   },
 });
 
-const ProductHeader = ({ data }) => {
+const ProductHeader = () => {
+  const productData = useAppSelector(selectProductById);
   return (
-    data && (
+    productData && (
       <Wrapper className="header">
         <div className="brand">
           <span>Thương hiệu:</span>
-          <Link to={`/thuong-hieu/${data?.brand?.slug}`}>
-            {data?.brand?.name}
+          <Link to={`/thuong-hieu/${productData?.brand?.slug}`}>
+            {productData?.brand?.name}
           </Link>
         </div>
-        <h2 className="name">{data?.name}</h2>
+        <h2 className="name">{productData?.name}</h2>
         <div className="quick-review">
-          <Rating
-            name="rate-filter"
-            size="large"
-            readOnly
-            defaultValue={+data.rating_average}
-            precision={0.5}
-          />
+          {productData.rating_average && (
+            <Rating
+              name="rate-filter"
+              size="large"
+              readOnly
+              defaultValue={+productData.rating_average}
+              precision={0.5}
+            />
+          )}
           <div className="feel-back">
-            (Xem {data?.review_count} đánh giá ) |
+            (Xem {productData?.review_count} đánh giá ) |
           </div>
-          <div className="qty-sold">{data?.quantity_sold?.text}</div>
+          <div className="qty-sold">{productData?.quantity_sold?.text}</div>
         </div>
       </Wrapper>
     )
   );
 };
 
-export default ProductHeader;
+export default memo(ProductHeader);

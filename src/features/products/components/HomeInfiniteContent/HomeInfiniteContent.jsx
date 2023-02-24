@@ -5,7 +5,7 @@ import {
   productActions,
   selectHomeInfinite,
 } from "features/products/productsSlice.js";
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import SingleProduct from "../SingleProduct/SingleProduct.jsx";
 import ProductHeader from "./Header.jsx";
 
@@ -17,16 +17,16 @@ const Wrapper = styled("div")({
     "display": "flex",
     "flexWrap": "wrap",
     "flexDirection": "row",
-    "gap": 8,
 
     "&>.product-item": {
       maxWidth: "calc(16.6667%)",
-      flex: "1 1 calc(16.6667% - 8px)",
+      flex: "1 1 calc(16.6667%)",
+      padding: "4px",
     },
   },
 });
 
-function HomeInfiniteContent(props) {
+function HomeInfiniteContent() {
   const dispatch = useAppDispatch();
   const productData = useAppSelector(selectHomeInfinite);
 
@@ -58,7 +58,7 @@ function HomeInfiniteContent(props) {
           top: "0px",
           zIndex: 997,
           width: "auto",
-          paddingTop: "0px",
+          padding: "0px 4px",
         }}
         tabs={productData.tabs}
         // @ts-ignore
@@ -82,4 +82,4 @@ function HomeInfiniteContent(props) {
   );
 }
 
-export default HomeInfiniteContent;
+export default memo(HomeInfiniteContent);

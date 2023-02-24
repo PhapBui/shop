@@ -1,7 +1,7 @@
 import { styled } from "@mui/material/styles";
 import CusContainer from "components/Custom/MuiBase/CusContainer.jsx";
 import MainHeader from "./MainHeader.jsx";
-import SubHeader from "./SubHeader.jsx";
+import SubHeader from "./SubHeader/SubHeader.jsx";
 
 const HeaderWrapper = styled("header")(({ theme }) => ({
   "width": "100%",
@@ -15,12 +15,12 @@ const HeaderWrapper = styled("header")(({ theme }) => ({
 
 const HeaderContainer = styled(CusContainer)(({ theme }) => ({}));
 
-function Header() {
+function Header({ quickSearchDatas }) {
   return (
     <HeaderWrapper>
       <HeaderContainer>
         <MainHeader />
-        <SubHeader />
+        <SubHeader quickSearchDatas={quickSearchDatas} />
       </HeaderContainer>
     </HeaderWrapper>
   );

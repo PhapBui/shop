@@ -1,5 +1,7 @@
 import { styled } from "@mui/material";
-import React from "react";
+import { useAppSelector } from "app/hooks.js";
+import { selectProductById } from "features/products/productsSlice.js";
+import React, { memo } from "react";
 import { Link } from "react-router-dom";
 
 const Wrapper = styled("div")({
@@ -20,12 +22,13 @@ const Wrapper = styled("div")({
   },
 });
 
-const Policy = ({ data }) => {
+const Policy = () => {
+  const productData = useAppSelector(selectProductById);
   return (
     <Wrapper>
-      {data &&
-        data.length > 0 &&
-        data.map((item, idx) => (
+      {productData?.warranty_info &&
+        productData?.warranty_info?.length > 0 &&
+        productData?.warranty_info?.map((item, idx) => (
           <div
             className="warranty-item"
             key={idx}
@@ -47,4 +50,4 @@ const Policy = ({ data }) => {
   );
 };
 
-export default Policy;
+export default memo(Policy);

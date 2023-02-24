@@ -188,7 +188,7 @@ const Filter = styled("div")({
 
 const Overview = ({ dataOverview, dataImages }) => {
   const RenderDetail = () => {
-    if (!dataOverview.stars) return;
+    if (dataOverview.stars) return;
     const arrEl = [];
     for (let value in dataOverview.stars) {
       dataOverview.stars[value]["number"] = value;

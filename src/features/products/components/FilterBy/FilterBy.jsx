@@ -1,6 +1,7 @@
 import { Stack, styled } from "@mui/material";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useAppSelector } from "app/hooks.js";
+import { selectFilterOption } from "features/products/pages/Search/searchSlice.js";
+import { memo, useEffect, useState } from "react";
 
 const FilterWrapper = styled(Stack)({
   flexDirection: "row",
@@ -35,32 +36,17 @@ const FilterItem = styled("div")({
 });
 
 function FilterBy() {
-  const [filterOption, setFilterOption] = useState([]);
-
+  const filterOption = useAppSelector(selectFilterOption);
+  const [options, setOptions] = useState([]);
   useEffect(() => {
-    const fetchFilterOption = async () => {
-      try {
-        const res = await axios.get(
-          `https://tiki.vn/api/v2/products?limit=40&include=advertisement&aggregations=2&trackity_id=4bb53046-4d5b-b591-a5ce-0092a332c47c&q=mu%C3%B4n+ki%E1%BA%BFp+nh%C3%A2n+sinh`
-        );
-        if (res) {
-          setFilterOption(() => {
-            return res.data.filters.filter(
-              (a) => a.type === "service" && a.icon !== undefined
-            );
-          });
-        }
-      } catch (error) {
-        console.log("Failed to fetch data filter Option: ", error);
-      }
-    };
-    fetchFilterOption();
-  }, []);
+    const newOptions = filterOption.filter((a) => a.icon !== undefined);
+    setOptions(newOptions);
+  }, [filterOption]);
   return (
     <FilterWrapper>
-      {filterOption &&
-        filterOption.length > 0 &&
-        filterOption.map((filter, idx) => (
+      {options &&
+        options.length > 0 &&
+        options.map((filter, idx) => (
           <FilterItem key={idx}>
             <img
               src={filter.icon}
@@ -74,4 +60,4 @@ function FilterBy() {
   );
 }
 
-export default FilterBy;
+export default memo(FilterBy);

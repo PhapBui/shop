@@ -1,5 +1,12 @@
-import React, { useState } from "react";
 import { styled } from "@mui/material";
+import { useAppSelector } from "app/hooks.js";
+import {
+  selectCollap,
+  selectHotCate,
+  selectHotKeys,
+  selectSearchSuggestion,
+} from "features/products/pages/Search/searchSlice.js";
+import { memo, useState } from "react";
 import SearchResultItem from "./SearchResultItem.jsx";
 import SearchWidget from "./SearchWidget.jsx";
 
@@ -23,19 +30,27 @@ const SuggestionList = styled("ul")(({ theme }) => ({
   },
 }));
 
-function SearchSuggestion({ suggestion, hotKeys, hotCategories, collap }) {
+function SearchSuggestion() {
   const [isCollap, setIsCollap] = useState(3);
+
+  const suggestionList = useAppSelector(selectSearchSuggestion);
+
+  const collaps = useAppSelector(selectCollap);
+  const hotKey = useAppSelector(selectHotKeys);
+  const hotCates = useAppSelector(selectHotCate);
+
   const handleCollap = () => {
     setIsCollap((prev) =>
-      prev < suggestion.length ? suggestion.length : collap
+      prev < suggestionList?.length ? suggestionList?.length : collaps
     );
   };
+
   return (
     <Wrapper>
       <SuggestionList>
-        {suggestion &&
-          suggestion.length > 0 &&
-          suggestion.map((data, idx) => {
+        {suggestionList &&
+          suggestionList.length > 0 &&
+          suggestionList.map((data, idx) => {
             return (
               <SearchResultItem
                 data={data}
@@ -49,14 +64,14 @@ function SearchSuggestion({ suggestion, hotKeys, hotCategories, collap }) {
             className="show-more-btn"
             onClick={handleCollap}
           >
-            {collap < isCollap ? "Thu gon ^ " : "Xem them ~"}
+            {collaps < isCollap ? "Thu gon ^ " : "Xem them ~"}
           </div>
         </div>
       </SuggestionList>
-      <SearchWidget data={hotKeys} />
-      <SearchWidget data={hotCategories} />
+      <SearchWidget data={hotKey} />
+      <SearchWidget data={hotCates} />
     </Wrapper>
   );
 }
 
-export default SearchSuggestion;
+export default memo(SearchSuggestion);

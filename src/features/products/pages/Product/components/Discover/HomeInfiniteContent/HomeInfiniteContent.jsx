@@ -1,9 +1,7 @@
-import axios from "axios";
+import { useAppSelector } from "app/hooks.js";
 import SingleProduct from "features/products/components/SingleProduct/SingleProduct.jsx";
-import * as React from "react";
-import { useRef } from "react";
-import { useState } from "react";
-import { useEffect } from "react";
+import { selectDiscoverList } from "features/products/productsSlice.js";
+import { useEffect, useRef, useState } from "react";
 import ProductHeader from "./Header.jsx";
 
 function HomeInfiniteContent(props) {
@@ -19,23 +17,16 @@ function HomeInfiniteContent(props) {
       return tabs[0].items;
     }
   });
-
+  const discoverData = useAppSelector(selectDiscoverList);
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await axios.get(
-          `https://tiki.vn/api/personalish/v1/blocks/collections?block_code=maybe_you_like&strategy=new_pdp&model.pdp.highest_product_id=117294932&model.pdp.seller_product_id=117294933`
-        );
-        setHeaderItem(res.data);
-        setTabs(res.data?.tabs);
-        setProducts(res.data?.tabs[0]?.items);
-        setTabActive(res.data?.tabs[0]?.title);
-      } catch (error) {
-        console.log("fail to fetch data: ", error);
-      }
-    };
-    fetchData();
-  }, []);
+    setHeaderItem(discoverData);
+    setTabs(discoverData?.tabs);
+    if (discoverData?.tabs) {
+      setProducts(discoverData?.tabs[0]?.items);
+      setTabActive(discoverData?.tabs[0]?.title);
+    }
+  }, [discoverData]);
+
   const handleNavigate = (e, i) => {
     e.preventDefault();
     if (tabs[i].title !== tabActive) setTabActive(tabs[i].title);

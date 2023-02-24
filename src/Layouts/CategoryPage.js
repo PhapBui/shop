@@ -1,6 +1,7 @@
 import { Stack, styled } from "@mui/material";
 import BreadCrumb from "components/Common/BreadCrumb";
 import Footer from "components/Common/Footer";
+import Header from "components/Common/Header/Header.jsx";
 // import Header from "components/Common/Header/Header.jsx";
 import Sidebar from "components/Common/Sidebar/Sidebar.jsx";
 import CusContainer from "components/Custom/MuiBase/CusContainer.jsx";
@@ -50,6 +51,7 @@ function CategoryPage() {
   }, []);
   return (
     <Wrapper>
+      <Header />
       <Main>
         <BreadCrumb />
         <h1>Cate Page</h1>

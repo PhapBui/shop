@@ -1,9 +1,13 @@
-import { Stack, styled } from "@mui/material";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import { Stack, styled } from "@mui/material";
+import { useAppSelector } from "app/hooks.js";
+import {
+  selectPaging,
+  selectSortOption,
+} from "features/products/pages/Search/searchSlice.js";
+import { memo, useState } from "react";
+import { Link } from "react-router-dom";
 const Wrapper = styled(Stack)({
   flexDirection: "row",
   justifyContent: "space-between",
@@ -53,29 +57,11 @@ const SortItem = styled("div")({
   },
 });
 function SortBy() {
-  const [sortOption, setSortOption] = useState([]);
-  const [page, setPage] = useState({ current: 0, total: 0 });
   const [sortBy, setSortBy] = useState("default");
-  useEffect(() => {
-    const fetchSortOption = async () => {
-      try {
-        const res = await axios.get(
-          `https://tiki.vn/api/v2/products?limit=40&include=advertisement&aggregations=2&trackity_id=4bb53046-4d5b-b591-a5ce-0092a332c47c&q=mu%C3%B4n+ki%E1%BA%BFp+nh%C3%A2n+sinh`
-        );
-        if (res) {
-          setSortOption(res.data.sort_options);
-          setPage((prev) => ({
-            ...prev,
-            current: res.data.paging.current_page,
-            total: res.data.paging.last_page,
-          }));
-        }
-      } catch (error) {
-        console.log("Failed to fetch data Sort Option: ", error);
-      }
-    };
-    fetchSortOption();
-  }, []);
+
+  const sortOptions = useAppSelector(selectSortOption);
+  const paging = useAppSelector(selectPaging);
+
   const handleNavigate = (sortBy) => {
     setSortBy(sortBy);
   };
@@ -85,9 +71,9 @@ function SortBy() {
         direction={{ xs: "column", sm: "row" }}
         spacing={{ xs: 1, sm: 2, md: 4 }}
       >
-        {sortOption &&
-          sortOption.length > 0 &&
-          sortOption.map((opt, idx) => (
+        {sortOptions &&
+          sortOptions.length > 0 &&
+          sortOptions.map((opt, idx) => (
             <SortItem key={idx}>
               <Link
                 to={`/search?q=mu%C3%B4n+ki%E1%BA%BFp+nh%C3%A2n+sinh&sort=${opt.query_value}`}
@@ -107,7 +93,7 @@ function SortBy() {
           direction={{ xs: "column", sm: "row" }}
           spacing={{ xs: 1, sm: 2, md: 4 }}
         >
-          {`${page.current} / ${page.total}`}
+          {`${paging?.current_page} / ${paging?.last_page}`}
           <div className="list-arrow">
             <KeyboardArrowLeftIcon fontSize="large" />
             <KeyboardArrowRightIcon fontSize="large" />
@@ -118,4 +104,4 @@ function SortBy() {
   );
 }
 
-export default SortBy;
+export default memo(SortBy);

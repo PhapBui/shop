@@ -1,5 +1,5 @@
 // @ts-ignore
-import React from "react";
+import React, { memo } from "react";
 import { styled } from "@mui/material";
 import { Link } from "react-router-dom";
 
@@ -133,7 +133,7 @@ function SearchWidget({ data }) {
           data?.items.length > 0 &&
           data?.items.map((item, idx) => (
             <Link
-              to={item.url.replace("https://tiki.vn/", "")}
+              to={`/${item.url.replace("https://tiki.vn/", "")}`}
               key={idx}
             >
               {data?.code === "hot_keywords" ? (
@@ -159,4 +159,4 @@ function SearchWidget({ data }) {
   );
 }
 
-export default SearchWidget;
+export default memo(SearchWidget);

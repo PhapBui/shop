@@ -1,5 +1,7 @@
 import { styled } from "@mui/material";
-import React from "react";
+import { useAppSelector } from "app/hooks.js";
+import { selectProductById } from "features/products/productsSlice.js";
+import React, { memo } from "react";
 
 const Wrapper = styled("div")(({ theme, color }) => ({
   display: "flex",
@@ -44,6 +46,13 @@ const ProductPrice = styled("div")(({ color }) => ({
 const Astra = styled("div")(({ color }) => ({
   "display": "flex",
   "marginTop": "10px",
+  "alignItems": "center",
+  "&>img": {
+    maxWidth: "42px",
+    height: 20,
+    marginLeft: 8,
+    cursor: "pointer",
+  },
   "&>.content": {
     borderRadius: "4px",
     backgroundColor: "rgb(242, 240, 254)",
@@ -57,50 +66,52 @@ const Astra = styled("div")(({ color }) => ({
     color: color,
     fontSize: "1.4rem",
   },
-  "&>img": {
-    width: "75px",
-    cursor: "pointer",
-  },
 }));
 
-const Price = ({ data }) => {
+const Price = () => {
+  const productData = useAppSelector(selectProductById);
   return (
     <Wrapper>
-      {data && (
+      {productData && (
         <ProductPrice>
           <div className="price">
             <div
               className={`current-price ${
-                data?.discount_rate > 0 ? "has-discount" : ""
+                productData?.discount_rate > 0 ? "has-discount" : ""
               }`}
             >
-              {data?.price?.toLocaleString("de-DE")} đ
+              {productData?.price?.toLocaleString("de-DE")} đ
             </div>
-            {data?.discount_rate > 0 && (
+            {productData?.discount_rate > 0 && (
               <div className="orignal-price">
-                {data?.originalPrice?.toLocaleString("de-DE")} đ
+                {productData?.original_price?.toLocaleString("de-DE")} đ
               </div>
             )}
-            {data?.discount_rate > 0 && (
-              <div className="discount-rate">{data?.discount_rate} %</div>
+            {productData?.discount_rate > 0 && (
+              <div className="discount-rate">
+                {productData?.discount_rate} %
+              </div>
             )}
           </div>
           <Astra
-            className="astra"
-            color={data?.astra.text_color}
+            className="asa_cashback_widget"
+            color={productData?.asa_cashback_widget?.text_color}
           >
             <div className="content">
               <img
-                src={data?.astra.icon.url}
-                height={data?.astra.icon.height}
-                width={data?.astra.icon.width}
-                alt="astra"
+                src={productData?.asa_cashback_widget?.icon.url}
+                height={productData?.asa_cashback_widget?.icon.height}
+                width={productData?.asa_cashback_widget?.icon.width}
+                alt="asa_cashback_widget"
               />
-              <span>{data?.astra.text}</span>
+              <span>{productData?.asa_cashback_widget?.text}</span>
             </div>
             <img
-              src={data?.astra.asa_plus_badge}
-              alt="astra"
+              src={
+                productData?.asa_cashback_widget?.new_badge ||
+                productData?.asa_cashback_widget?.asa_plus_badge
+              }
+              alt="asa_cashback_widget"
             />
           </Astra>
         </ProductPrice>
@@ -109,4 +120,4 @@ const Price = ({ data }) => {
   );
 };
 
-export default Price;
+export default memo(Price);

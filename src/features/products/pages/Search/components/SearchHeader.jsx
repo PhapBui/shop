@@ -1,7 +1,9 @@
 import { Box, styled } from "@mui/material";
+import { useAppSelector } from "app/hooks.js";
 import FilterBy from "features/products/components/FilterBy/FilterBy.jsx";
 import SortBy from "features/products/components/SortBy/SortBy.jsx";
-import React from "react";
+import { memo } from "react";
+import { selectKey } from "../searchSlice.js";
 
 const Wrapper = styled(Box)({
   padding: "0px",
@@ -15,7 +17,8 @@ const Title = styled("h3")({
 });
 
 function SearchHeader() {
-  const key = "Muôn kiếp nhân sinh";
+  const key = useAppSelector(selectKey);
+
   return (
     <Wrapper>
       <Title>Kết quả tìm kiếm cho `{key}` </Title>
@@ -25,4 +28,4 @@ function SearchHeader() {
   );
 }
 
-export default SearchHeader;
+export default memo(SearchHeader);

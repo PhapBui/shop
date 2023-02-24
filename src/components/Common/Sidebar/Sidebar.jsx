@@ -8,7 +8,7 @@ import {
   Stack,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Location from "../Header/SubHeader/Location.jsx";
 import MenuList from "./components/MenuList.jsx";
@@ -106,7 +106,6 @@ const InputPrice = styled("input")({
 
 function Sidebar({ data, page }) {
   const [isShow, setIsShow] = useState({});
-
   const handleShowItem = (type, value1, value2) => {
     setIsShow((prev) => ({
       ...prev,
@@ -591,4 +590,4 @@ function Sidebar({ data, page }) {
   }
 }
 
-export default Sidebar;
+export default memo(Sidebar);

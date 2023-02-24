@@ -1,8 +1,9 @@
 // @ts-nocheck
 import { styled } from "@mui/material";
-import axios from "axios";
+import { useAppSelector } from "app/hooks.js";
 import SlickCarousel from "components/Custom/Carousel/SlickCarousel.jsx";
-import { useEffect, useState } from "react";
+import { selectSimilarList } from "features/products/productsSlice.js";
+import { memo } from "react";
 import { Link } from "react-router-dom";
 import ProductItem from "../Common/ProductItem.jsx";
 
@@ -38,39 +39,21 @@ const settings = {
   slidesToScroll: 6,
 };
 function SimilarProducts() {
-  const [combo, setCombo] = useState([]);
-
-  useEffect(() => {
-    const fetchCombo = async () => {
-      try {
-        const res = await axios.get(
-          `https://tiki.vn/api/personalish/v2/pdp?strategy=new_pdp&mpid=113864742&spid=113864746`
-        );
-        if (res) {
-          const similarProduct = res.data.widgets.reduce((a, b) => {
-            a[b.code] = b;
-            return a;
-          }, {});
-          setCombo(similarProduct?.similar_products);
-        }
-      } catch (error) {
-        console.log("Fail to fetch combo: ", error);
-      }
-    };
-    fetchCombo();
-  }, []);
+  const SimilarData = useAppSelector(selectSimilarList);
   return (
     <Wrapper>
       <Header>
-        <Title>{combo.title}</Title>
-        <Readmore to={combo.view_more_url}>{combo.view_more_text}</Readmore>
+        <Title>{SimilarData.title}</Title>
+        <Readmore to={SimilarData.view_more_url}>
+          {SimilarData.view_more_text}
+        </Readmore>
       </Header>
       <SlickCarousel
-        settings={{ ...settings, infinite: combo?.items?.length > 6 }}
+        settings={{ ...settings, infinite: SimilarData?.items?.length > 6 }}
       >
-        {combo.items &&
-          combo.items.length > 0 &&
-          combo.items.map((product, i) => (
+        {SimilarData.items &&
+          SimilarData.items.length > 0 &&
+          SimilarData.items.map((product, i) => (
             <ProductItem
               key={product.id}
               data={product}
@@ -81,4 +64,4 @@ function SimilarProducts() {
   );
 }
 
-export default SimilarProducts;
+export default memo(SimilarProducts);

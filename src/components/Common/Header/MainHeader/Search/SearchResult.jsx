@@ -1,6 +1,10 @@
 import { styled } from "@mui/material";
-import { useEffect } from "react";
+import { useCallback } from "react";
+import { memo, useEffect } from "react";
 import { useState } from "react";
+import PropTypes from "prop-types";
+import { selectSearchResultList } from "features/products/pages/Search/searchSlice.js";
+import { useAppSelector } from "app/hooks.js";
 import SearchResultItem from "./SearchResultItem.jsx";
 import SearchSuggestion from "./SearchSuggestion.jsx";
 
@@ -15,21 +19,20 @@ const Wrapper = styled("div")(({ theme }) => ({
   boxShadow: "rgb(0 0 0 / 28%) 0px 6px 12px 0px",
 }));
 
-function SearchResult({
-  searchResult,
-  suggestion,
-  hotKeys,
-  hotCategories,
-  collap,
-  handleSearchItem,
-}) {
+function SearchResult({ handleSearchItem, searchValue }) {
   const [isSearching, setIsSearching] = useState(false);
+  const searchResult = useAppSelector(selectSearchResultList);
   useEffect(() => {
-    setIsSearching(searchResult && searchResult.length > 0);
-  }, [searchResult]);
+    setIsSearching(searchValue && searchResult && searchResult.length > 0);
+  }, [searchResult, searchValue]);
+
+  const handleOnClick = useCallback(() => {
+    if (handleSearchItem) handleSearchItem();
+  }, [handleSearchItem]);
+
   return (
-    <Wrapper onClick={handleSearchItem}>
-      {isSearching ? (
+    <Wrapper onClick={handleOnClick}>
+      {isSearching && searchResult ? (
         searchResult.map((item) => (
           <SearchResultItem
             data={item}
@@ -38,15 +41,13 @@ function SearchResult({
           />
         ))
       ) : (
-        <SearchSuggestion
-          suggestion={suggestion}
-          hotKeys={hotKeys}
-          hotCategories={hotCategories}
-          collap={collap}
-        />
+        <SearchSuggestion />
       )}
     </Wrapper>
   );
 }
-
-export default SearchResult;
+SearchResult.propTypes = {
+  handleSearchItem: PropTypes.func,
+  searchValue: PropTypes.string,
+};
+export default memo(SearchResult);

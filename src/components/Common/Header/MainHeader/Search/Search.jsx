@@ -3,8 +3,11 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import InputBase from "@mui/material/InputBase";
 import { alpha, styled } from "@mui/material/styles";
 import TippyHeadless from "@tippyjs/react/headless";
-import axios from "axios";
-import useDebounce from "hooks/useDebounce.js";
+import { useAppDispatch, useAppSelector } from "app/hooks.js";
+import {
+  searchActions,
+  selectSearchLoading,
+} from "features/products/pages/Search/searchSlice.js";
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import SearchResult from "./SearchResult.jsx";
@@ -51,10 +54,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     transition: theme.transitions.create("width"),
     width: "100%",
     [theme.breakpoints.up("sm")]: {
-      "width": "100%",
-      "&:focus": {
-        width: "20ch",
-      },
+      width: "100%",
     },
   },
 }));
@@ -78,60 +78,19 @@ const SubmitSearch = styled(LoadingButton)(({ theme }) => ({
 
 const Search = () => {
   const inputRef = useRef();
-
-  const [searchResult, setSearchResult] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [showResult, setShowResult] = useState(false);
-  const [showLoading, setShowLoading] = useState(false);
 
-  const [hotKeys, setHotKeys] = useState([]);
-  const [hotCategories, setHotCategories] = useState([]);
-  const [suggestion, setSuggestion] = useState([]);
-  const [collap, setCollap] = useState([]);
+  const location = useLocation();
 
-  const debounceValue = useDebounce(searchValue, 500);
+  const dispatch = useAppDispatch();
+
+  const loading = useAppSelector(selectSearchLoading);
 
   useEffect(() => {
-    if (!debounceValue.trim()) {
-      setSearchResult([]);
-      return;
-    }
-
-    const fetchApi = async () => {
-      setShowLoading(true);
-
-      const res = await axios.get(
-        `https://tiki.vn/api/v2/search/suggestion?q=${debounceValue}`
-      );
-      setSearchResult(res.data.data);
-      console.log(res);
-      setShowLoading(false);
-    };
-    fetchApi();
-  }, [debounceValue]);
-
-  useEffect(() => {
-    const fetchSearchSuggest = async () => {
-      try {
-        const res = await axios.get(`https://tiki.vn/api/v2/search/suggestion`);
-        if (res) {
-          setSuggestion(res.data?.data);
-          setCollap(res.data?.data_collapsed);
-
-          const widgets = res.data?.widgets.reduce((a, b) => {
-            a[b.code] = b;
-            return a;
-          }, {});
-
-          setHotKeys(widgets.hot_keywords);
-          setHotCategories(widgets.hot_categories);
-        }
-      } catch (error) {
-        console.log("fail to fetch Search Suggest data: ", error);
-      }
-    };
-    fetchSearchSuggest();
-  }, []);
+    dispatch(searchActions.fetchSearchResult(searchValue));
+    dispatch(searchActions.fetchSearchSuggestion());
+  }, [searchValue, dispatch]);
 
   const handleOnChangeInput = (e) => {
     const searchValue = e.target.value;
@@ -140,8 +99,6 @@ const Search = () => {
   const handleHideResult = () => {
     setShowResult(false);
   };
-
-  const location = useLocation();
 
   useEffect(() => {
     handleHideResult();
@@ -164,11 +121,7 @@ const Search = () => {
                 // @ts-ignore
                 tabIndex="-1"
                 {...attrs}
-                searchResult={searchResult}
-                suggestion={suggestion}
-                hotKeys={hotKeys}
-                hotCategories={hotCategories}
-                collap={collap}
+                searchValue={searchValue}
               />
             )}
             onClickOutside={handleHideResult}
@@ -182,7 +135,7 @@ const Search = () => {
             />
           </TippyHeadless>
         </span>
-        <SubmitSearch loading={showLoading}>Tim kiem</SubmitSearch>
+        <SubmitSearch loading={loading}>Tim kiem</SubmitSearch>
       </Input>
     </>
   );

@@ -2,9 +2,19 @@ import { Stack, styled } from "@mui/material";
 import Footer from "components/Common/Footer";
 import Home from "features/products/pages/Home";
 // import Header from "components/Common/Header/Header.jsx";
+import { useAppDispatch, useAppSelector } from "app/hooks.js";
+import Header from "components/Common/Header/Header.jsx";
 import Sidebar from "components/Common/Sidebar/Sidebar.jsx";
 import CusContainer from "components/Custom/MuiBase/CusContainer.jsx";
-import { useEffect, useState } from "react";
+import {
+  productActions,
+  selectSidebarMenuConfig,
+} from "features/products/productsSlice.js";
+import { useEffect } from "react";
+import {
+  searchActions,
+  selectQuickSearch,
+} from "features/products/pages/Search/searchSlice.js";
 
 const Wrapper = styled("main")(({ theme }) => ({
   backgroundColor: "rgb(245, 245, 250)",
@@ -23,22 +33,26 @@ const ProductContainer = styled(Stack)(({ theme }) => ({
   width: "calc(100% - 254px)",
 }));
 function HomePage() {
-  const [dataSideBar, setDataSideBar] = useState([]);
+  const dispatch = useAppDispatch();
+  const sidebarMenuConfig = useAppSelector(selectSidebarMenuConfig);
 
   useEffect(() => {
-    fetch("https://api.tiki.vn/raiden/v2/menu-config?platform=desktop")
-      .then((res) => res.json())
-      .then((res) => {
-        setDataSideBar(res);
-      });
-    return () => {};
-  }, []);
+    dispatch(productActions.fetchProductsList());
+  }, [dispatch]);
+
+  const quickSearchDatas = useAppSelector(selectQuickSearch);
+
+  useEffect(() => {
+    dispatch(searchActions.fetchQuickSearch());
+  }, [dispatch]);
+
   return (
     <Wrapper>
+      <Header quickSearchDatas={quickSearchDatas} />
       <Main>
         <Content>
           <Sidebar
-            data={dataSideBar}
+            data={sidebarMenuConfig}
             page={"home"}
           />
           <ProductContainer>

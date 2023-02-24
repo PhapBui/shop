@@ -6,8 +6,7 @@ const productTikiApi = {
   /**
    *
    * @param {object} params
-   * @param {string} params.block_code
-   * @param {number} params.page_size
+
    *
    * @returns {object}
    */
@@ -27,11 +26,10 @@ const productTikiApi = {
 
   /**
    *
-   * @param {string} key
+   * @param {undefined|string} key
    * @returns {object}
    */
-  getSearchResultSuggestion: (key) =>
-    appTiki.get(`/v2/search/suggestion/${key}`),
+  getSearchResultList: (key) => appTiki.get(`/v2/search/suggestion?q=${key}`),
 
   /**
    *
@@ -44,7 +42,7 @@ const productTikiApi = {
    * @returns {object}
    *
    */
-  getSearchResultByKey: (params) => appTiki.get(`/v2/products/`, { params }),
+  getSearchResultByKey: (params) => appTiki.get(`/v2/products`, { params }),
 
   /**
    *
@@ -52,7 +50,7 @@ const productTikiApi = {
    * @returns {object}
    */
   getProductDeliveryInfo: (id) =>
-    appTiki.get(`/v2/products/widget/delivery_info/${id}`),
+    appTiki.get(`/v2/products/widget/delivery_info/${id}platform=web&pdp=v2`),
 
   /**
    * @param {object} params
@@ -66,7 +64,7 @@ const productTikiApi = {
    * @param {number} params.seller_id
    * @returns {object}
    */
-  getProductPhotoReview: (params) => appTiki.get(`/v2/reviews`, { params }),
+  getProductReviewList: (params) => appTiki.get(`/v2/reviews`, { params }),
 
   /**
    * @param {object} params
@@ -74,7 +72,7 @@ const productTikiApi = {
    * @param {string} params.ids
    * @returns {object}
    */
-  getProductReviewedRecently: (params) =>
+  getProductViewedRecently: (params) =>
     appTiki.get(`/v2/me/recently_viewed`, { params }),
 
   /**
@@ -101,6 +99,18 @@ const productTikiApi = {
    * @returns
    */
   getWidgets: (mpid) => appTiki.get(`/personalish/v2/pdp?mpid=${mpid}`),
+
+  /**
+   * @param {object} params
+   * @param {number} params.product_id
+   * @param {number} params.seller_id
+   * @returns
+   */
+
+  getProductMatchDiscount: (params) =>
+    appTiki.get(
+      `/v2/products/widget/bundle/${params.product_id}?seller_id=${params.seller_id}`
+    ),
 
   /**
    * @param {string} params
@@ -156,9 +166,14 @@ const productTikiApi = {
    * @param {number} params.seller_id
    * @returns
    */
+
   getProductComboSeller: (params) =>
     appTikiApi.get(
       `/product-detail/api/v1/products/${params.product_id}/widget/combo?seller_id=${params.seller_id}`
     ),
+  /**
+   * @returns
+   */
+  getSibarMenuConfig: () => appTikiApi.get(`/raiden/v2/menu-config`),
 };
 export default productTikiApi;

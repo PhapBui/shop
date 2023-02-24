@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import { styled } from "@mui/material/styles";
 import { Stack } from "@mui/material";
@@ -69,4 +69,4 @@ Location.propTypes = {
   pretext: PropTypes.string,
   aftertext: PropTypes.bool,
 };
-export default Location;
+export default memo(Location);

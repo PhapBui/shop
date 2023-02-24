@@ -3,6 +3,7 @@ import axios from "axios";
 
 const appTiki = axios.create({
   baseURL: process.env.REACT_APP_TIKI_BASE_API,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },

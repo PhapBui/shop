@@ -2,11 +2,17 @@ import { styled } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "app/hooks.js";
 import {
   cartActions,
-  addToCart,
+  // addToCart,
 } from "components/Common/Header/cart/cartSlice.js";
+import { selectProductById } from "features/products/productsSlice.js";
 import React, { useState } from "react";
 
 const Wrapper = styled("div")({
+  "display": "flex",
+  "flexDirection": "column",
+  "margin": "16px 0px 0px",
+  "padding": "16px 0px",
+  "borderTop": "1px solid rgb(242, 242, 242)",
   "&>.label": {
     fontSize: "1.6rem",
     lineHeight: "1.6",
@@ -56,7 +62,7 @@ const Wrapper = styled("div")({
       "width": "100%",
       "maxWidth": "300px",
       "height": "4.8rem",
-      "fontSize": "1.6rem",
+      "fontSize": "1.5rem",
       "lineHeight": "2.4rem",
       "fontWeight": "600",
       "textTransform": "capitalize",
@@ -70,8 +76,8 @@ const Wrapper = styled("div")({
 
         "&.installment-payment": {
           "border": "1px solid rgb(13, 92, 182)",
-          "fontSize": "1.6rem",
-          "lineHeight": "1.6rem",
+          "fontSize": "1.5rem",
+          "lineHeight": "1.5rem",
           "color": "rgb(13, 92, 182)",
           "flexDirection": "column",
           "textTransform": "unset",
@@ -81,6 +87,7 @@ const Wrapper = styled("div")({
           "&>span": {
             fontSize: "1.1rem",
             lineHeight: "1.45",
+            fontWeight: 400,
           },
         },
       },
@@ -107,8 +114,7 @@ const Wrapper = styled("div")({
 
 const AddToCart = () => {
   const [quantily, setQuantily] = useState(1);
-  const count = useAppSelector(addToCart);
-  console.log(count[0]?.quantily);
+  // const count = useAppSelector(addToCart);
   const dispatch = useAppDispatch();
 
   const handleProductQuantily = (e) => {
@@ -124,6 +130,7 @@ const AddToCart = () => {
     dispatch(cartActions.addToCart(data));
     setQuantily(1);
   };
+  const productData = useAppSelector(selectProductById);
   return (
     <Wrapper>
       <p className="label">Số lượng</p>
@@ -160,13 +167,19 @@ const AddToCart = () => {
         >
           Chọn mua
         </button>
-        <button
-          data-view-id="pdp_installment_button"
-          className="btn btn-add-to-cart installment-payment"
-          type="button"
-        >
-          Mua trước trả sau<span>Lãi suất 0%</span>
-        </button>
+        {productData?.installment_info_v2 && (
+          <a
+            data-view-id="pdp_installment_button"
+            className="btn btn-add-to-cart installment-payment"
+            type="button"
+            href={productData?.installment_info_v2?.redirect_url}
+            rel="noreferrer"
+            target="_blank"
+          >
+            {productData?.installment_info_v2?.title}
+            <span>{productData?.installment_info_v2?.summary}</span>
+          </a>
+        )}
         <div className="btn btn-chat">
           <svg
             width="18"

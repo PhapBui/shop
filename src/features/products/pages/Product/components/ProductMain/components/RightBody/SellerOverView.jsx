@@ -1,16 +1,20 @@
 import { styled } from "@mui/material";
-import React from "react";
+import React, { memo } from "react";
 import { Link } from "react-router-dom";
 import StarIcon from "@mui/icons-material/Star";
+import { useAppSelector } from "app/hooks.js";
+import { selectSellerInfo } from "features/products/productsSlice.js";
 
 const Wrapper = styled("div")({
   "&>.seller-info": {
     "display": "flex",
     "alignItems": "center",
-    "justifyContent": "space-between",
+    "justifyContent": "flex-start",
     "minHeight": "60px",
     "&>.seller-name": {
       "marginLeft": 12,
+      "display": "flex",
+      "flexDirection": "column",
       "&>span": {
         margin: "0px 0px 2px",
         fontSize: "1.6rem",
@@ -29,7 +33,7 @@ const Wrapper = styled("div")({
     "alignItems": "center",
     "justifyContent": "space-between",
     "minHeight": "40px",
-    "&>.item": {
+    "& .item": {
       "display": "flex",
       "flexDirection": "column",
       "flex": "1 1 0%",
@@ -98,41 +102,42 @@ const Wrapper = styled("div")({
   },
 });
 
-const SellerOverView = ({ data }) => {
+const SellerOverView = () => {
+  const sellerInfo = useAppSelector(selectSellerInfo);
   return (
     <Wrapper>
       <Link
-        to={`/${data?.current?.url.replace("https://tiki.vn/", "")}`}
+        to={`/${sellerInfo?.data?.seller.url.replace("https://tiki.vn/", "")}`}
         className="seller-info"
       >
         <picture>
           <source
-            srcSet={data?.current?.icon}
+            srcSet={sellerInfo?.data?.seller.icon}
             type="image/webp"
           />
           <img
             className="seller-thumbnail"
-            src={data?.current?.icon}
-            alt={data?.current?.name}
+            src={sellerInfo?.data?.seller.icon}
+            alt={sellerInfo?.data?.seller.name}
             width={44}
           />
         </picture>
         <div className="seller-name">
-          <span>{data?.current?.name}</span>
+          <span>{sellerInfo?.data?.seller.name}</span>
           <picture>
             <source />
             <img
-              src={data?.current?.badge_img?.url}
-              alt={data?.current?.name}
-              width={data?.current?.badge_img?.width}
+              src={sellerInfo?.data?.seller.badge_img?.url}
+              alt={sellerInfo?.data?.seller.name}
+              width={sellerInfo?.data?.seller.badge_img?.width}
             />
           </picture>
         </div>
       </Link>
       <div className="seller-detail">
-        {data?.current?.info &&
-          data?.current?.info.length > 0 &&
-          data?.current?.info.map((item, idx) => (
+        {sellerInfo?.data?.seller.info &&
+          sellerInfo?.data?.seller.info.length > 0 &&
+          sellerInfo?.data?.seller.info.map((item, idx) => (
             <div key={idx}>
               <div className={`item ${item.type}`}>
                 <div className="title">
@@ -145,7 +150,7 @@ const SellerOverView = ({ data }) => {
                 </div>
                 <div className="sub-title">{item.sub_title}</div>
               </div>
-              {idx < data?.current?.info.length - 1 ? (
+              {idx < sellerInfo?.data?.seller.info.length - 1 ? (
                 <div className="border"></div>
               ) : (
                 ""
@@ -157,7 +162,10 @@ const SellerOverView = ({ data }) => {
         <Link
           className="action"
           data-view-id="pdp_store_seller.view"
-          to={`/${data?.current?.url.replace("https://tiki.vn/", "")}`}
+          to={`/${sellerInfo?.data?.seller.url.replace(
+            "https://tiki.vn/",
+            ""
+          )}`}
         >
           <img
             src="https://salt.tikicdn.com/ts/upload/49/27/ff/d735c33edfdc6cf6aeb6e183bec28869.png"
@@ -181,4 +189,4 @@ const SellerOverView = ({ data }) => {
   );
 };
 
-export default SellerOverView;
+export default memo(SellerOverView);

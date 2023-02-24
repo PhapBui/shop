@@ -1,4 +1,5 @@
 import { styled } from "@mui/material";
+import { memo } from "react";
 import { Link } from "react-router-dom";
 const Item = styled(Link)({
   "display": "flex",
@@ -20,7 +21,7 @@ const Item = styled(Link)({
 function SearchResultItem({ data, classNames }) {
   return (
     <Item
-      to={data.url.replace("https://tiki.vn/", "")}
+      to={`/${data.url.replace("https://tiki.vn/", "")}`}
       className={classNames}
     >
       <img
@@ -34,4 +35,4 @@ function SearchResultItem({ data, classNames }) {
   );
 }
 
-export default SearchResultItem;
+export default memo(SearchResultItem);

@@ -1,6 +1,7 @@
 import { styled } from "@mui/material";
 import { Link } from "react-router-dom";
 import StarIcon from "@mui/icons-material/Star";
+import { memo } from "react";
 
 const Product = styled("div")(({ theme }) => ({
   textDecoration: "none",
@@ -94,8 +95,8 @@ function ProductItem({ data }) {
     return meta;
   }, {});
   return (
-    <Product onClick={() => console.log(data)}>
-      <Item to={`/san-pham/${data.url_path}`}>
+    <Product>
+      <Item to={`/san-pham/${data?.url_path}`}>
         <div>
           <Thumbnail className="thumbnail">
             {meta && meta.official_store?.icon && (
@@ -163,4 +164,4 @@ function ProductItem({ data }) {
 
 ProductItem.propTypes = {};
 
-export default ProductItem;
+export default memo(ProductItem);

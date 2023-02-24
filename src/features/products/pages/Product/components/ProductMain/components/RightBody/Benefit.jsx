@@ -1,5 +1,7 @@
 import { styled } from "@mui/material";
-import React from "react";
+import { useAppSelector } from "app/hooks.js";
+import { selectProductById } from "features/products/productsSlice.js";
+import React, { memo } from "react";
 
 const Wrapper = styled("div")({
   "display": "flex",
@@ -23,12 +25,13 @@ const Wrapper = styled("div")({
   },
 });
 
-const Benefit = ({ data }) => {
+const Benefit = () => {
+  const productData = useAppSelector(selectProductById);
   return (
     <Wrapper>
-      {data &&
-        data.length > 0 &&
-        data.map((item, idx) => (
+      {productData?.benefits &&
+        productData?.benefits?.length > 0 &&
+        productData?.benefits?.map((item, idx) => (
           <div
             className="benefit-item"
             key={idx}
@@ -48,4 +51,4 @@ const Benefit = ({ data }) => {
   );
 };
 
-export default Benefit;
+export default memo(Benefit);

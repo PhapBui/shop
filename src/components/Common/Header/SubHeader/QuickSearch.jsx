@@ -1,4 +1,5 @@
 import { styled } from "@mui/material/styles";
+import { memo } from "react";
 import { Link } from "react-router-dom";
 
 const QuickList = styled("ul")(({ theme }) => ({
@@ -37,4 +38,4 @@ function QuickSearch({ data }) {
   );
 }
 
-export default QuickSearch;
+export default memo(QuickSearch);
