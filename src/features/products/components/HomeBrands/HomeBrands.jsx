@@ -1,11 +1,8 @@
 // @ts-nocheck
 import { Box, Card, CardMedia, Stack, styled } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "app/hooks.js";
+import { useAppSelector } from "app/hooks.js";
 import SlickCarousel from "components/Custom/Carousel/SlickCarousel.jsx";
-import {
-  productActions,
-  selectHomeBrands,
-} from "features/products/productsSlice.js";
+import { selectHomeBrands } from "features/products/productsSlice.js";
 import { memo, useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -38,12 +35,7 @@ function HomeBrand() {
   const [title, setTitle] = useState([]);
   const [brands, setBrands] = useState([]);
 
-  const dispatch = useAppDispatch();
   const brandsData = useAppSelector(selectHomeBrands);
-
-  useEffect(() => {
-    dispatch(productActions.fetchProductsList);
-  }, [dispatch]);
 
   useEffect(() => {
     if (brandsData.length > 0) {

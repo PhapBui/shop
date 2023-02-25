@@ -41,27 +41,28 @@ const settings = {
 function BuyXGetY() {
   const comboData = useAppSelector(selectComboList);
   return (
-    comboData?.items &&
-    comboData?.items?.length > 0 && (
-      <Wrapper>
-        <Header>
-          <Title>{comboData?.title}</Title>
-          <Readmore to={comboData?.view_more_url}>
-            {comboData?.view_more_text}
-          </Readmore>
-        </Header>
-        <SlickCarousel settings={settings}>
-          {comboData?.items &&
-            comboData?.items?.length > 0 &&
-            comboData?.items?.map((product, i) => (
-              <ProductItem
-                key={product.id}
-                comboData={product}
-              />
-            ))}
-        </SlickCarousel>
-      </Wrapper>
-    )
+    <>
+      {comboData?.items && comboData?.items?.length > 0 && (
+        <Wrapper>
+          <Header>
+            <Title>{comboData?.title}</Title>
+            <Readmore to={comboData?.view_more_url}>
+              {comboData?.view_more_text}
+            </Readmore>
+          </Header>
+          <SlickCarousel settings={settings}>
+            {comboData?.items &&
+              comboData?.items?.length > 0 &&
+              comboData?.items?.map((product, i) => (
+                <ProductItem
+                  key={product.id}
+                  comboData={product}
+                />
+              ))}
+          </SlickCarousel>
+        </Wrapper>
+      )}
+    </>
   );
 }
 

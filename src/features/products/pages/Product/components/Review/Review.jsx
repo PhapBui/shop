@@ -1,9 +1,6 @@
 import { styled } from "@mui/material";
 import { useAppSelector } from "app/hooks.js";
-import {
-  selectClientImage,
-  selectReviewList,
-} from "features/products/productsSlice.js";
+import { selectReviewList } from "features/products/productsSlice.js";
 import { memo, useEffect, useState } from "react";
 import Overview from "./components/OverView/Overview.jsx";
 import ReviewList from "./components/ReviewList/ReviewList.jsx";
@@ -27,24 +24,17 @@ const Title = styled("h2")({
 });
 
 function Review() {
-  const [overView, setOverView] = useState([]);
   const [reviewList, setReviewList] = useState([]);
   const [page, setPage] = useState([]);
   const reviewsList = useAppSelector(selectReviewList);
-  const imagesList = useAppSelector(selectClientImage);
   useEffect(() => {
-    setOverView(reviewsList);
     setReviewList(reviewsList?.data);
     setPage(reviewsList?.paging);
   }, [reviewsList]);
-
   return (
     <Wrapper>
       <Title>Đánh Giá - Nhận Xét Từ Khách Hàng</Title>
-      <Overview
-        dataOverview={overView}
-        dataImages={imagesList}
-      />
+      <Overview />
       <ReviewList
         data={reviewList}
         page={page}

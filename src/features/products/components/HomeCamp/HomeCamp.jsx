@@ -1,12 +1,9 @@
 // @ts-nocheck
 import { Box, styled } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "app/hooks.js";
+import { useAppSelector } from "app/hooks.js";
 import SlickCarousel from "components/Custom/Carousel/SlickCarousel.jsx";
-import {
-  productActions,
-  selectHomeCamp,
-} from "features/products/productsSlice.js";
-import { useEffect, useState } from "react";
+import { selectHomeCamp } from "features/products/productsSlice.js";
+import { memo, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const HomeCampWrapper = styled(Box)(({ theme }) => ({
@@ -41,25 +38,16 @@ const _settings = {
 };
 
 function HomeCamp() {
-  const [title, setTitle] = useState("");
   const [brands, setBrands] = useState([]);
   const [items, setItems] = useState([]);
+  const [title, setTitle] = useState("");
 
-  const dispatch = useAppDispatch();
   const productData = useAppSelector(selectHomeCamp);
 
   useEffect(() => {
-    dispatch(productActions.fetchProductsList);
-  }, [dispatch]);
-
-  useEffect(() => {
-    const items = productData?.data?.reduce((a, b) => {
-      a[b.group] = b;
-      return a;
-    }, {});
-    setBrands(items);
-    setItems(items?.msp_widget_banner_left.banners);
-    setTitle(items?.msp_widget_banner_left.title.text);
+    setBrands(productData);
+    setItems(productData?.msp_widget_banner_left?.banners);
+    setTitle(productData?.msp_widget_banner_left?.title.text);
   }, [productData]);
 
   return (
@@ -158,4 +146,4 @@ function HomeCamp() {
   );
 }
 
-export default HomeCamp;
+export default memo(HomeCamp);

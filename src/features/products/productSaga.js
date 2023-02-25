@@ -6,7 +6,6 @@ import { productActions } from "./productsSlice.js";
 function* fetchHomeBrands() {
   const paramsValue = ["msp_widget_banner_premium"];
   const params = paramsValue.map((v, i) => `group=${v}`).join("&");
-
   const res = yield all([call(productTikiApi.getBanners, params)]);
   yield put(productActions.fetchHomeBrands(res));
 }
@@ -36,6 +35,9 @@ function* fetchWidgetsBanner() {
     "msp_widget_banner_left",
     "msp_widget_banner_right_top",
     "msp_widget_banner_right_bottom",
+    "msp_widget_banner_premium",
+    "home_banner_main_v2",
+    "msp_app_background_v2",
   ];
   const params = paramsValue.map((v, i) => `group=${v}`).join("&");
 

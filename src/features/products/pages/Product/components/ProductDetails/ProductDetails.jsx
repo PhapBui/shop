@@ -1,7 +1,9 @@
 // @ts-nocheck
+import { LoadingButton } from "@mui/lab";
 import { styled, Table, TableBody, TableCell, TableRow } from "@mui/material";
 import { useAppSelector } from "app/hooks.js";
 import {
+  loadingProductLoading,
   selectBannerEvent,
   selectProductById,
 } from "features/products/productsSlice.js";
@@ -111,8 +113,10 @@ function ProductDetails() {
     () => desRef?.current?.clientHeight
   );
   const [isShow, setIsShow] = useState(true);
+
   const bannerEvent = useAppSelector(selectBannerEvent);
   const ProductData = useAppSelector(selectProductById);
+  const loading = useAppSelector(loadingProductLoading);
 
   useEffect(() => {
     if (ProductData?.specifications?.length > 0) {
@@ -120,6 +124,7 @@ function ProductDetails() {
       setDescription(ProductData?.description);
     }
   }, [ProductData]);
+
   const handleShowDescription = () => {
     if (desRef.current?.clientHeight !== desHeight) {
       setDesHeight(desRef.current?.clientHeight);
@@ -152,6 +157,14 @@ function ProductDetails() {
         </GroupContent>
         <GroupContent>
           <Title>Mô Tả Sản Phẩm</Title>
+          {loading && (
+            <LoadingButton
+              loading
+              variant="outlined"
+            >
+              Loading....
+            </LoadingButton>
+          )}
           <Content>
             <div
               className="toggle-content"

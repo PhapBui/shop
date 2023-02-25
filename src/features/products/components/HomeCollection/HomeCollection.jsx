@@ -1,11 +1,8 @@
 // @ts-nocheck
 import { Box, Card, CardMedia, Stack, styled } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "app/hooks.js";
+import { useAppSelector } from "app/hooks.js";
 import SlickCarousel from "components/Custom/Carousel/SlickCarousel.jsx";
-import {
-  productActions,
-  selectHomeCollection,
-} from "features/products/productsSlice.js";
+import { selectHomeCollection } from "features/products/productsSlice.js";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -44,11 +41,7 @@ const settings = {
 function HomeCollection() {
   const [title, setTitle] = useState("");
   const [items, setItems] = useState([]);
-  const dispatch = useAppDispatch();
   const product = useAppSelector(selectHomeCollection);
-  useEffect(() => {
-    dispatch(productActions.fetchProductsList());
-  }, [dispatch]);
 
   useEffect(() => {
     if (product.length > 0) {

@@ -1,7 +1,12 @@
 // @ts-nocheck
 import { Box, styled } from "@mui/material";
+import { useAppSelector } from "app/hooks.js";
 import SlickCarousel from "components/Custom/Carousel/SlickCarousel.jsx";
-import { useEffect, useState } from "react";
+import {
+  selectSliderBanner,
+  selectSubBanner,
+} from "features/products/productsSlice.js";
+import { memo, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const HomeBanner = styled(Box)(({ theme }) => ({
@@ -50,7 +55,7 @@ const HomeBanner = styled(Box)(({ theme }) => ({
     height: "100%",
   },
 }));
-function Banner(props) {
+function Banner() {
   const settings = {
     dots: true,
     infinite: true,
@@ -61,25 +66,16 @@ function Banner(props) {
   const [dataBanner, setDataBanner] = useState([]);
   const [subBanner, setSubBanner] = useState([]);
 
-  useEffect(() => {
-    fetch(
-      "https://tka.tiki.vn/widget/api/v1/banners-group?group=home_banner_main_v2"
-    )
-      .then((res) => res.json())
-      .then((res) => {
-        setDataBanner(res.data[0].banners);
-      });
-  }, []);
+  const sliderData = useAppSelector(selectSliderBanner);
+  const subBannerData = useAppSelector(selectSubBanner);
 
   useEffect(() => {
-    fetch(
-      "https://tka.tiki.vn/widget/api/v1/banners-group?group=msp_app_background_v2"
-    )
-      .then((res) => res.json())
-      .then((res) => {
-        setSubBanner(res.data[0].banners[0]);
-      });
-  }, []);
+    setDataBanner(sliderData?.banners);
+  }, [sliderData]);
+
+  useEffect(() => {
+    if (subBannerData.banners) setSubBanner(subBannerData?.banners[0]);
+  }, [subBannerData]);
   return (
     <HomeBanner>
       <div className="main-banner">
@@ -133,6 +129,4 @@ function Banner(props) {
   );
 }
 
-Banner.propTypes = {};
-
-export default Banner;
+export default memo(Banner);

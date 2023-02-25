@@ -2,6 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   loading: false,
+
+  sliderbanner: [],
+  subBanner: [],
   homeCollection: [],
   homeBrands: [],
   homeHotDeal: [],
@@ -60,7 +63,13 @@ export const productSlice = createSlice({
       state.homeHotDeal = action.payload;
     },
     fetchHomeCamp(state, action) {
-      state.homeCamp = action.payload;
+      const dataWidgetGroup = action.payload?.data?.reduce((a, b) => {
+        a[b.group] = b;
+        return a;
+      }, {});
+      state.homeCamp = dataWidgetGroup;
+      state.sliderbanner = dataWidgetGroup.home_banner_main_v2;
+      state.subBanner = dataWidgetGroup.msp_app_background_v2;
     },
 
     fetchHomeInfinite(state, action) {
@@ -194,6 +203,10 @@ export const loadingProductLoading = (state) =>
   state.rootReducer.products.loading;
 export const loadingProductList = (state) => state.rootReducer.products.list;
 export const selectFilterProduct = (state) => state.rootReducer.products.filter;
+
+export const selectSliderBanner = (state) =>
+  state.rootReducer.products.sliderbanner;
+export const selectSubBanner = (state) => state.rootReducer.products.subBanner;
 
 export const selectHomeCollection = (state) =>
   state.rootReducer.products.homeCollection;

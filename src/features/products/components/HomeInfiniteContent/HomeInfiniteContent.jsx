@@ -1,10 +1,7 @@
 // @ts-nocheck
 import { styled } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "app/hooks.js";
-import {
-  productActions,
-  selectHomeInfinite,
-} from "features/products/productsSlice.js";
+import { useAppSelector } from "app/hooks.js";
+import { selectHomeInfinite } from "features/products/productsSlice.js";
 import { memo, useEffect, useRef, useState } from "react";
 import SingleProduct from "../SingleProduct/SingleProduct.jsx";
 import ProductHeader from "./Header.jsx";
@@ -27,15 +24,10 @@ const Wrapper = styled("div")({
 });
 
 function HomeInfiniteContent() {
-  const dispatch = useAppDispatch();
-  const productData = useAppSelector(selectHomeInfinite);
-
   const [products, setProducts] = useState([]);
   const [tabActive, setTabActive] = useState("");
 
-  useEffect(() => {
-    dispatch(productActions.fetchProductsList());
-  }, [dispatch]);
+  const productData = useAppSelector(selectHomeInfinite);
 
   useEffect(() => {
     if (productData.tabs) {

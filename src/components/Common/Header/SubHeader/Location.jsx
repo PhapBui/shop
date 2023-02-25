@@ -1,10 +1,11 @@
-import React, { memo } from "react";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
-import { styled } from "@mui/material/styles";
 import { Stack } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
+import { memo, useEffect } from "react";
 
-import useFetch from "hooks/useFetch.js";
+import { useAppDispatch, useAppSelector } from "app/hooks.js";
+import { selectUserLocation, userActions } from "features/users/userSlice.js";
 
 const LocationContainer = styled(Stack)(({ theme }) => ({
   "flexDirection": "row",
@@ -38,12 +39,14 @@ const LocationContainer = styled(Stack)(({ theme }) => ({
 }));
 
 function Location({ pretext, aftertext = false }) {
-  const locationData = useFetch(
-    `https://api.tiki.vn/delivery/api/v2/location-detection`
-  );
   const handleChangeLocation = () => {
     console.log("change location");
   };
+  const dispatch = useAppDispatch();
+  const location = useAppSelector(selectUserLocation);
+  useEffect(() => {
+    dispatch(userActions.fetchUserLocation());
+  }, [dispatch]);
   return (
     <LocationContainer>
       <h4 className="title">{pretext} </h4>
@@ -51,7 +54,7 @@ function Location({ pretext, aftertext = false }) {
       <div className="address">
         {
           // @ts-ignore
-          locationData?.data?.address_info
+          location?.data?.address_info
         }
       </div>
       {aftertext && (

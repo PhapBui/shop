@@ -1,6 +1,11 @@
 // @ts-nocheck
-import { styled, Rating } from "@mui/material";
-import React from "react";
+import { Rating, styled } from "@mui/material";
+import { useAppSelector } from "app/hooks.js";
+import {
+  selectClientImage,
+  selectReviewList,
+} from "features/products/productsSlice.js";
+import { memo, useEffect, useState } from "react";
 
 const Wrapper = styled("div")({
   display: "flex",
@@ -186,50 +191,58 @@ const Filter = styled("div")({
   },
 });
 
-const Overview = ({ dataOverview, dataImages }) => {
-  const RenderDetail = () => {
-    if (dataOverview.stars) return;
-    const arrEl = [];
-    for (let value in dataOverview.stars) {
-      dataOverview.stars[value]["number"] = value;
-      arrEl.push(dataOverview.stars[value]);
+const Overview = () => {
+  const [stars, setStars] = useState([]);
+  const [value, setValue] = useState([]);
+
+  const [sort_options, setSort_options] = useState([]);
+  const reviewsList = useAppSelector(selectReviewList);
+  const imagesList = useAppSelector(selectClientImage);
+
+  useEffect(() => {
+    const { stars } = reviewsList;
+    setSort_options(reviewsList.sort_options);
+    if (!stars) return;
+
+    let numberStar = [];
+    let value = [];
+    for (let a in stars) {
+      numberStar.push(a);
+      value.push(stars[a]);
     }
-    return arrEl.reverse();
-  };
-
-  const dataReview = RenderDetail();
-  const { sort_options } = dataOverview;
-
+    setStars(numberStar.reverse());
+    setValue(value.reverse());
+  }, [reviewsList]);
   return (
     <Wrapper>
-      {dataOverview && (
+      {reviewsList && (
         <Rate className="review-rating">
           <div className="inner">
             <div className="summary">
-              <div className="rating-point">{dataOverview.rating_average}</div>
+              <div className="rating-point">{reviewsList.rating_average}</div>
               <div className="rating-stars">
                 <div className="visualize">
-                  {dataOverview.rating_average && (
+                  {reviewsList.rating_average && (
                     <Rating
                       name="rate-filter"
                       size="large"
                       readOnly
-                      title={dataOverview.rating_average}
-                      defaultValue={+dataOverview.rating_average}
+                      title={reviewsList.rating_average}
+                      defaultValue={+reviewsList.rating_average}
                       precision={0.1}
                     />
                   )}
                 </div>
                 <div className="rating-count">
-                  {dataOverview.reviews_count} nhận xét
+                  {reviewsList.reviews_count} nhận xét
                 </div>
               </div>
             </div>
             <div className="detail">
-              {dataReview &&
-                dataReview.length > 0 &&
+              {value &&
+                value.length > 0 &&
                 // @ts-ignore
-                dataReview?.map((item, idx) => (
+                value?.map((item, idx) => (
                   <div
                     key={idx}
                     className="review-level"
@@ -238,7 +251,7 @@ const Overview = ({ dataOverview, dataImages }) => {
                       name="rate-filter"
                       size="large"
                       readOnly
-                      defaultValue={+item.number}
+                      defaultValue={+stars[idx]}
                       precision={0.1}
                     />
                     <div className="progress-bar">
@@ -256,42 +269,39 @@ const Overview = ({ dataOverview, dataImages }) => {
           <Statistic className="statistics">
             <div className="title">Đánh giá của khách đã mua hàng</div>
             <div className="customers-feelback">
-              {dataOverview &&
-                dataOverview?.attribute_vote_summary?.votes?.length > 0 &&
-                dataOverview?.attribute_vote_summary?.votes?.map(
-                  (item, idx) => (
-                    <div
-                      className="item"
-                      key={idx}
-                    >
-                      <div className="circle-progress">
-                        <Circle
-                          className="circle"
-                          number={(
-                            (item.agree * 100) /
-                            item.total_vote
-                          ).toFixed(0)}
-                        >
-                          <div className="span">
-                            {((item.agree * 100) / item.total_vote).toFixed(0)}%
-                          </div>
-                        </Circle>
-                      </div>
-                      <div className="label">{item.attribute_name}</div>
+              {reviewsList &&
+                reviewsList?.attribute_vote_summary?.votes?.length > 0 &&
+                reviewsList?.attribute_vote_summary?.votes?.map((item, idx) => (
+                  <div
+                    className="item"
+                    key={idx}
+                  >
+                    <div className="circle-progress">
+                      <Circle
+                        className="circle"
+                        number={((item.agree * 100) / item.total_vote).toFixed(
+                          0
+                        )}
+                      >
+                        <div className="span">
+                          {((item.agree * 100) / item.total_vote).toFixed(0)}%
+                        </div>
+                      </Circle>
                     </div>
-                  )
-                )}
+                    <div className="label">{item.attribute_name}</div>
+                  </div>
+                ))}
             </div>
           </Statistic>
-          {dataImages && dataImages.length && (
+          {imagesList && imagesList.length && (
             <Images className="images-feelback">
               <div className="title">
-                Tất cả hình ảnh ({dataImages?.length})
+                Tất cả hình ảnh ({imagesList?.length})
               </div>
               <div className="images-galley">
-                {dataImages &&
-                  dataImages?.length > 0 &&
-                  dataImages.map((item, idx) =>
+                {imagesList &&
+                  imagesList?.length > 0 &&
+                  imagesList.map((item, idx) =>
                     idx < 3 ? (
                       <div
                         className="item"
@@ -313,10 +323,10 @@ const Overview = ({ dataOverview, dataImages }) => {
                   <div
                     className="thumbnail "
                     style={{
-                      backgroundImage: `url(${dataImages[4]?.images[0]?.full_path}) `,
+                      backgroundImage: `url(${imagesList[4]?.images[0]?.full_path}) `,
                     }}
                   ></div>
-                  <div className="img-total">+{dataImages?.length - 3}</div>
+                  <div className="img-total">+{imagesList?.length - 3}</div>
                 </div>
               </div>
             </Images>
@@ -351,4 +361,4 @@ const Overview = ({ dataOverview, dataImages }) => {
   );
 };
 
-export default Overview;
+export default memo(Overview);
