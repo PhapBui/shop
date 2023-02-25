@@ -39,8 +39,8 @@ function HomeBrand() {
 
   useEffect(() => {
     if (brandsData.length > 0) {
-      setTitle(brandsData[0].data[0].title);
-      setBrands(brandsData[0].data[0].banners);
+      setTitle(brandsData[0]?.data[0]?.title);
+      setBrands(brandsData[0]?.data[0]?.banners);
     }
   }, [brandsData]);
 
