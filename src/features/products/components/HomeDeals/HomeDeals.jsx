@@ -51,7 +51,7 @@ function HomeDeal() {
     if (hotDealData.data) {
       setProducts(hotDealData.data);
       setTimeStamp(
-        hotDealData.data[0].special_to_date -
+        hotDealData.data[0]?.special_to_date -
           new Date(hotDealData.datetime).getTime() / 1000
       );
     }

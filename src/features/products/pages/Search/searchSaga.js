@@ -24,7 +24,6 @@ function* fetchSearchResultList(action) {
 
 function* fetchQuickSearch(action) {
   try {
-    console.log(action);
     const res = yield call(
       productTikiApi.getSuggestFeatureKeywords,
       action.payload
