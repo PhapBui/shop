@@ -1,5 +1,11 @@
 import { styled } from "@mui/material/styles";
-import { memo } from "react";
+import { useAppDispatch, useAppSelector } from "app/hooks.js";
+import {
+  searchActions,
+  selectKey,
+  selectQuickSearch,
+} from "features/products/pages/Search/searchSlice.js";
+import { memo, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const QuickList = styled("ul")(({ theme }) => ({
@@ -21,12 +27,18 @@ const QuickListItem = styled(Link)(({ theme }) => ({
   color: "inherit",
 }));
 
-function QuickSearch({ data }) {
+function QuickSearch() {
+  const dispatch = useAppDispatch();
+  const key = useAppSelector(selectKey);
+  const quickSearchData = useAppSelector(selectQuickSearch);
+  useEffect(() => {
+    dispatch(searchActions.fetchQuickSearch(key));
+  }, [dispatch, key]);
   return (
     <QuickList>
-      {data &&
-        data.length > 0 &&
-        data.map((a) => (
+      {quickSearchData &&
+        quickSearchData.length > 0 &&
+        quickSearchData.map((a) => (
           <QuickListItem
             to={`/${a.url.replace("https://tiki.vn/", "")}`}
             key={a.url}

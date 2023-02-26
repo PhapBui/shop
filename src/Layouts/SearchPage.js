@@ -13,8 +13,9 @@ import {
   selectQuickSearch,
   selectSearchParams,
 } from "features/products/pages/Search/searchSlice.js";
+import { selectProductById } from "features/products/productsSlice.js";
 import queryString from "query-string";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 const Wrapper = styled("main")(({ theme }) => ({
@@ -34,8 +35,10 @@ const ProductContainer = styled(Stack)(({ theme }) => ({
   overflow: "hidden",
 }));
 function SearchPage() {
-  // const [params, setParams] = useState({});
+  const [params, setParams] = useState({});
+  const [categoryId, setCategoryId] = useState("");
 
+  const productData = useAppSelector(selectProductById);
   const dispatch = useAppDispatch();
 
   const location = useLocation();
@@ -45,22 +48,26 @@ function SearchPage() {
   const key = useAppSelector(selectKey);
 
   useEffect(() => {
-    const params = queryString.parse(location.search);
-    dispatch(searchActions.setKey(params.q));
-    // setParams({
-    //   q: params.q,
-    //   page_name: pageName,
-    //   category_id: params.category_id,
-    // });
-    return () => {};
-  }, [location.search, pageName, dispatch]);
+    setCategoryId(productData.categories?.id);
+  }, [productData]);
 
   useEffect(() => {
-    // dispatch(searchActions.fetchQuickSearch(params));
+    const params = queryString.parse(location.search);
+    dispatch(searchActions.setKey(params.q));
+    setParams({
+      q: params.q,
+      page_name: pageName,
+      category_id: categoryId,
+    });
+    return () => {};
+  }, [location.search, pageName, dispatch, categoryId]);
+
+  useEffect(() => {
     if (key) {
+      dispatch(searchActions.fetchQuickSearch(params));
       dispatch(searchActions.fetchSearchProductList(key));
     }
-  }, [dispatch, key]);
+  }, [dispatch, key, params]);
 
   return (
     <Wrapper>
